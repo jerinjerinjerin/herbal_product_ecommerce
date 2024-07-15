@@ -78,6 +78,8 @@ export const NavItem_Right = [
   {
     name: "My Bag",
     icon: <IoBag />,
+    path: "/cart",
+
   },
 ];
 
@@ -1003,4 +1005,40 @@ export const ProductReviewsComment = [
     text: 'I am satisfied with the results of this product. It is worth trying.',
     profileImage: productReviewProfile,
   }
+];
+
+
+export const cartItems = [
+  {
+    id: 1,
+    name: "Saptamveda",
+    category: "Herbal Medicines",
+    image: "https://iyarkaiherbals.com/images/com_hikashop/upload/thumbnails/0x0f/herbal_hair_oil_mix.jpg",
+    price: 100,
+    quantity: 4,
+  },
+  {
+    id: 2,
+    name: "Herbals",
+    category: "Medicinal Plants",
+    image: "https://www.herbaldaily.in/Uploads/Product/ea960cdf-82ab-48dd-ab26-d663610ce719/_default.jpg",
+    price: 150,
+    quantity: 2,
+  },
+  {
+    id: 3,
+    name: "Organic Oils",
+    category: "Essential Oils",
+    image: "https://www.dharaniherbbals.in/images/1017.jpg",
+    price: 80,
+    quantity: 5,
+  },
+  {
+    id: 4,
+    name: "Herbal Powder",
+    category: "Natural Remedies",
+    image: "https://iyarkaiherbals.com/images/com_hikashop/upload/thumbnails/0x0f/herbal_powder.jpg",
+    price: 60,
+    quantity: 3,
+  },
 ];
