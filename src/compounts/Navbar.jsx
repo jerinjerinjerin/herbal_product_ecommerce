@@ -1,5 +1,4 @@
 import React from "react";
-import logoIcon from "../assets/react.svg";
 import { NavItem_Left, NavItem_Right } from "../data/data";
 import { BsSearch } from "react-icons/bs";
 import {
@@ -14,9 +13,9 @@ import { Link } from "react-router-dom";
 
 const Navbar = () => {
   return (
+    <>
     <nav className="justify-between items-center flex lg:px-5 md:px-2  h-[100px]">
       <div className="px-10 md:px-0">
-        <img src={logoIcon} alt="logo-icon" className="h-10" />
       </div>
       <div className="space-x-5 hidden lg:flex">
         {NavItem_Left.map((item, index) => (
@@ -72,6 +71,7 @@ const Navbar = () => {
         </Sheet>
       </div>
     </nav>
+    </>
   );
 };
 
