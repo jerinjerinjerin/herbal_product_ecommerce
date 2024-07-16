@@ -18,6 +18,9 @@ import { useEffect } from "react";
 import axios from "axios";
 import Login from "./page/Login";
 import SignUp from "./page/SignUp";
+import AllUsers from "./page/AllUsers";
+import AdminPanel from "./page/AdminPanel";
+import AllProducts from "./page/AllProducts";
 
 function App() {
   const dispatch = useDispatch();
@@ -34,6 +37,7 @@ function App() {
       console.log(error.message);
     }
   };
+
   useEffect(() => {
     fetchUserDetials();
   }, []);
@@ -47,7 +51,7 @@ function App() {
               fetchUserDetials, //user detial fetch
             }}
           >
-              <ToastContainer position="top-center" />
+            <ToastContainer position="top-center" />
             <div className="w-full z-10 sticky bg-slate-900 top-0 overflow-x-hidden border-b border-green-600">
               <Navbar />
             </div>
@@ -56,6 +60,10 @@ function App() {
                 <Route path="/signup" element={<SignUp />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/" element={<Home />} />
+                <Route path="/admin-panel/" element={<AdminPanel />}>
+                  <Route path="all-users" element={<AllUsers />} />
+                  <Route path="all-products" element={<AllProducts />} />
+                </Route>
                 <Route path="/filter-product" element={<FilterProduct />} />
                 <Route path="/view-product/:id" element={<ViewProduct />} />
                 <Route path="/checkout" element={<Checkout />} />

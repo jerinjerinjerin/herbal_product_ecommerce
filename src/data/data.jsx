@@ -67,10 +67,6 @@ export const NavItem_Right = [
     icon: <FaCar />,
   },
   {
-    name: "Login",
-    icon: <FaUser />,
-  },
-  {
     name: "WishList",
     icon: <FaHeart />,
   },

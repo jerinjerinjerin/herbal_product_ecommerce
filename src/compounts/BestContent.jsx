@@ -35,7 +35,7 @@ const BestContent = () => {
         className="absolute inset-0 flex flex-col z-5 gap-5 items-center justify-center bg-black bg-opacity-70 p-5 rounded text-center"
       >
         <motion.h1
-          className="text-white md:text-2xl text-md font-semibold"
+          className="text-white md:text-lg text-md font-semibold"
           initial={{ opacity: 0 }}
           animate={controls}
         >

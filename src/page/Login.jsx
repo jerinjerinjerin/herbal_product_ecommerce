@@ -116,7 +116,7 @@ const Login = () => {
             <Button
               className="bg-transparent text-white px-6 py-6 w-full rounded-lg hover:scale-105 hover:bg-green-600 transition-all mx-auto mt-1 border border-green-600 flex items-center justify-center"
             >
-              Sign up
+              Login
             </Button>
           </form>
           <p className="py-4 text-white">

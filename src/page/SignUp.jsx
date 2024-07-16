@@ -3,11 +3,11 @@ import axios from "axios";
 import loginImage from "../assets/signin.gif";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
-import { imageToBase64 } from "../helpers/ImageIoBase64";
-import { validateEmail } from "../commen/helper";
 import backendDomain from "../commen/api";
 import { toast } from "react-toastify";
 import { Button } from "@/components/ui/button";
+import { imageTobase64 } from "@/helpers/ImageIoBase64";
+import ValidatEmail from "@/commen/helper";
 
 const SignUp = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -38,7 +38,7 @@ const SignUp = () => {
 
   const handleUploadPic = async (e) => {
     const file = e.target.files[0];
-    const imagePic = await imageToBase64(file);
+    const imagePic = await imageTobase64(file);
 
     setData((prev) => ({
       ...prev,
@@ -63,7 +63,7 @@ const SignUp = () => {
         return;
       }
 
-      if (!validateEmail(data.email)) {
+      if (!ValidatEmail(data.email)) {
         setError("Email is not valid");
         return;
       }
