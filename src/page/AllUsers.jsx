@@ -37,7 +37,7 @@ const AllUsers = () => {
 
   return (
     <motion.div
-      className="bg-slate-900 bg-opacity-35 rounded-md pb-4"
+      className="overflow-x-auto h-full w-full mx-auto bg-gray-800 bg-opacity-40 rounded-md pt-5"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{
@@ -47,9 +47,9 @@ const AllUsers = () => {
         stiffness: 100,
       }}
     >
-      <h1>All Users</h1>
-      <div className="overflow-x-auto">
-        <table className="min-w-full">
+      <h1 className="text-white text-center mb-4">All Users</h1>
+      <div className="overflow-x-auto w-full">
+        <table className="min-w-full border-collapse">
           <thead className="text-white">
             <tr>
               <th className="border border-green-600 text-center">ID</th>
@@ -76,9 +76,9 @@ const AllUsers = () => {
                     {user?.email}
                   </td>
                   <td
-                    className={`border border-green-600${
-                      user?.role === "ADMIN" ? " text-blue-600" : "text-white"
-                    } text-center`}
+                    className={`border border-green-600 text-center ${
+                      user?.role === "ADMIN" ? "text-blue-600" : "text-white"
+                    }`}
                   >
                     {user?.role}
                   </td>

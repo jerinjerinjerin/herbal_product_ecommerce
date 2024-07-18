@@ -19,6 +19,8 @@ import { setUserDetials } from "@/redux/userSlice";
 import { Button } from "@/components/ui/button";
 
 const Navbar = () => {
+
+ 
   const user = useSelector((state) => state?.user?.user);
   const dispatch = useDispatch();
   const [menuDisplay, setMenuDisplay] = useState(false);
@@ -41,10 +43,6 @@ const Navbar = () => {
       toast.error(error);
     }
   };
-
-  useEffect(() => {
-    setUserDetials();
-  }, []);
 
   return (
     <>
@@ -82,6 +80,7 @@ const Navbar = () => {
                 className="text-2xl cursor-pointer"
                 onClick={handlechangeMenu}
               >
+                
                 {user && (
                   <img
                     src={user?.data.profilePic}

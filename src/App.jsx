@@ -10,7 +10,6 @@ import Navbar from "./compounts/Navbar";
 import SocialMedia from "./compounts/Socials";
 import Checkout from "./compounts/Checkout";
 import Cart from "./compounts/Cart";
-import Context from "./context/context";
 import { useDispatch } from "react-redux";
 import backendDomin from "./commen/api";
 import { setUserDetials } from "./redux/userSlice";
@@ -21,6 +20,7 @@ import SignUp from "./page/SignUp";
 import AllUsers from "./page/AllUsers";
 import AdminPanel from "./page/AdminPanel";
 import AllProducts from "./page/AllProducts";
+import Context from "./context/context";
 
 function App() {
   const dispatch = useDispatch();
@@ -52,7 +52,7 @@ function App() {
             }}
           >
             <ToastContainer position="top-center" />
-            <div className="w-full z-10 sticky bg-slate-900 top-0 overflow-x-hidden border-b border-green-600">
+            <div className="w-full z-10 sticky bg-slate-900 top-0 overflow-x-hidden shadow-md shadow-green-200">
               <Navbar />
             </div>
             <main className="min-h-[calc(100vh-120px)]">
