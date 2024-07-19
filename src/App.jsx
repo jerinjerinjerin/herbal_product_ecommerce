@@ -21,6 +21,7 @@ import AllUsers from "./page/AllUsers";
 import AdminPanel from "./page/AdminPanel";
 import AllProducts from "./page/AllProducts";
 import Context from "./context/context";
+import ViewAdminProduct from "./compounts/ViewAdminProduct";
 
 function App() {
   const dispatch = useDispatch();
@@ -63,6 +64,7 @@ function App() {
                 <Route path="/admin-panel/" element={<AdminPanel />}>
                   <Route path="all-users" element={<AllUsers />} />
                   <Route path="all-products" element={<AllProducts />} />
+                  <Route path="view-admin-product/:id" element={<ViewAdminProduct/>}/>
                 </Route>
                 <Route path="/filter-product" element={<FilterProduct />} />
                 <Route path="/view-product/:id" element={<ViewProduct />} />

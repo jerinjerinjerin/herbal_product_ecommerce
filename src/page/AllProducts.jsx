@@ -30,6 +30,8 @@ const AllProducts = () => {
     }
   };
 
+  //product delete api endpoint
+
   const deleteProduct = async (productId) => {
     try {
       const response = await axios.delete(

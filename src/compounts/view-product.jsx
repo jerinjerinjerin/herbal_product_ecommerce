@@ -9,7 +9,6 @@ import StarRating from "./StarRating";
 import { motion } from "framer-motion"; // Import motion
 import ProductReviews from "./ProductReviews";
 import RelactedProduct from "./RelactedProducts";
-import { ModeToggle } from "@/components/mode-toggle";
 
 const ViewProduct = () => {
   const { id } = useParams();
