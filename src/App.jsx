@@ -25,12 +25,12 @@ import ViewAdminProduct from "./compounts/ViewAdminProduct";
 
 function App() {
   const dispatch = useDispatch();
+
   const fetchUserDetials = async () => {
     try {
       const response = await axios.get(`${backendDomin}/api/user-detials`, {
         withCredentials: "include",
       });
-      // console.log(response.data,"success data")
       if (response.status === 200) {
         dispatch(setUserDetials(response.data));
       }
@@ -47,11 +47,7 @@ function App() {
     <>
       <div className="">
         <BrowserRouter>
-          <Context.Provider
-            value={{
-              fetchUserDetials, //user detial fetch
-            }}
-          >
+          <Context.Provider value={{ fetchUserDetials }}>
             <ToastContainer position="top-center" />
             <div className="w-full z-10 sticky bg-slate-900 top-0 overflow-x-hidden shadow-md shadow-green-200">
               <Navbar />
