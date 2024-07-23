@@ -69,7 +69,7 @@ const ProductReviews = () => {
     <div className="product-reviews p-1 bg-slate-800 px-10 py-10 rounded-md bg-opacity-20 border-[2px] border-green-600">
       <div className="flex justify-between py-4">
         <h2 className="text-xl text-gray-400">Product Reviews</h2>
-        <Button className="bg-transparent border border-green-600 text-white rounded-md hover:border-white">
+        <Button className="bg-transparent border border-green-600 text-white rounded-md hover:bg-green-600">
           Add Review
         </Button>
       </div>
@@ -85,7 +85,7 @@ const ProductReviews = () => {
         <div className="show-more-button mt-5">
           <Button
             onClick={toggleShowReviews}
-            className="bg-transparent py-5 border border-green-600 text-white rounded-md hover:border-white"
+            className="bg-transparent py-5 border border-green-600 text-white rounded-md hover:bg-green-600"
           >
             {showAllReviews ? "Show Less Reviews" : "Show More Reviews"}
           </Button>

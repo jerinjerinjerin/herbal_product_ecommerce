@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import Slider from "react-slick";
-import { motion, useAnimation } from "framer-motion";
-import { Button } from "../components/ui/button";
+import { motion, AnimatePresence, useAnimation } from "framer-motion";
+import { Button } from "../../components/ui/button";
 import { PiHandbagSimpleFill } from "react-icons/pi";
-import { MostBought, BestOffers, MensHelth, WomenHelth } from "../data/data";
+import { MostBought, BestOffers, MensHelth, WomenHelth } from "../../data/data";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import StarRating from "./StarRating";
+import StarRating from "../hero/StarRating";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { IoIosEye } from "react-icons/io";
@@ -29,14 +29,8 @@ const PrevArrow = ({ onClick }) => (
   </div>
 );
 
-const RelactedProduct = () => {
-  const allProducts = [
-    ...MostBought,
-    ...BestOffers,
-    ...MensHelth,
-    ...WomenHelth,
-  ];
-
+const FilterProduct = () => {
+  const [currentTab, setCurrentTab] = useState("Most bought");
   const [sliderSettings, setSliderSettings] = useState({
     dots: true,
     infinite: true,
@@ -90,6 +84,24 @@ const RelactedProduct = () => {
     window.addEventListener("scroll", scrollHandler);
     return () => window.removeEventListener("scroll", scrollHandler);
   }, [controls]);
+
+  const tabContentVariants = {
+    hidden: { x: "-100vw", opacity: 0 },
+    visible: {
+      x: 0,
+      opacity: 1,
+      transition: { duration: 0.9, ease: "easeInOut" },
+    },
+    exit: {
+      x: "100vw",
+      opacity: 0,
+      transition: { duration: 0.9, ease: "easeInOut" },
+    },
+  };
+
+  const handleTabChange = (value) => {
+    setCurrentTab(value);
+  };
 
   const renderItems = (items) => {
     return items.map((item) => (
@@ -184,15 +196,66 @@ const RelactedProduct = () => {
         <div className="container mx-auto">
           <div className="flex flex-col md:gap-[100px] mb-[10px]">
             <div>
-              <h1 className="px-8 text-left text-white font-semibold text-2xl">
-                Related Products
-              </h1>
+              <div className="flex bg-black flex-col gap-3 pb-2 md:pb-0 md:flex-row w-full md:max-w-[30%] max-w-[53%] mx-auto">
+                {[
+                  "Most bought",
+                  "Best offers",
+                  "Mens helth",
+                  "Women helth",
+                ].map((tab) => (
+                  <motion.div
+                    whileTap={{ scale: 0.9 }}
+                    key={tab}
+                    className={`focus:outline-none mt-[0px] ${
+                      currentTab === tab ? "bg-gray-700" : "bg-black"
+                    }`}
+                  >
+                    <Button
+                      onClick={() => handleTabChange(tab)}
+                      className={`w-full border border-white bg-transparent${
+                        currentTab === tab
+                          ? "text-white border border-white font-semibold bg-green-700"
+                          : "text-white border-[2px] border-green-600 "
+                      }`}
+                    >
+                      {tab.charAt(0).toUpperCase() + tab.slice(1)}
+                    </Button>
+                  </motion.div>
+                ))}
+              </div>
             </div>
 
             <div className="min-h-[70vh] md:-mt-[70px] w-full bg-black">
-              <Slider {...sliderSettings} className="px-6">
-                {renderItems(allProducts)}
-              </Slider>
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={currentTab}
+                  initial="hidden"
+                  animate="visible"
+                  exit="exit"
+                  variants={tabContentVariants}
+                >
+                  {currentTab === "Most bought" && (
+                    <Slider {...sliderSettings} className="px-6">
+                      {renderItems(MostBought)}
+                    </Slider>
+                  )}
+                  {currentTab === "Best offers" && (
+                    <Slider {...sliderSettings} className="px-6">
+                      {renderItems(BestOffers)}
+                    </Slider>
+                  )}
+                  {currentTab === "Mens helth" && (
+                    <Slider {...sliderSettings} className="px-6">
+                      {renderItems(MensHelth)}
+                    </Slider>
+                  )}
+                  {currentTab === "Women helth" && (
+                    <Slider {...sliderSettings} className="px-6">
+                      {renderItems(WomenHelth)}
+                    </Slider>
+                  )}
+                </motion.div>
+              </AnimatePresence>
             </div>
           </div>
         </div>
@@ -201,4 +264,4 @@ const RelactedProduct = () => {
   );
 };
 
-export default RelactedProduct;
+export default FilterProduct;

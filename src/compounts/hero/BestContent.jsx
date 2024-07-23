@@ -2,6 +2,7 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { motion, useAnimation } from "framer-motion";
 import { useInView } from "react-intersection-observer";
+import { Link } from "react-router-dom";
 
 const BestContent = () => {
   const controls = useAnimation();
@@ -47,9 +48,11 @@ const BestContent = () => {
           Discover the difference with our trusted herbal solutions, where customer
           satisfaction is always our top priority.
         </motion.h1>
+        <Link to={'/all-products-shop'}>
         <Button className="border-[2px] border-green-600 hover:border-white bg-transparent hover:bg-green-600">
-          View all products
+          All products
         </Button>
+        </Link>
       </motion.div>
     </div>
   );

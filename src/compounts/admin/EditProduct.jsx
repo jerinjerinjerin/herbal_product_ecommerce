@@ -3,14 +3,14 @@ import { CgClose } from "react-icons/cg";
 import { useDropzone } from "react-dropzone";
 import axios from "axios";
 import { toast } from "react-toastify";
-import productCategory from "../helpers/productCategory";
-import ageByShop from "../helpers/productAgeByShop";
-import DisplayImage from "./DisplayImage";
-import backendDomin from "../commen/api";
-import uploadImage from "@/helpers/UploadImage";
 import { Button } from "@/components/ui/button";
 import EditProductInput from "./EditProductInput";
 import EditProductImageUpload from "./EditProductImageUpload";
+import DisplayImage from "./DisplayImage";
+import backendDomin from "@/commen/api";
+import ageByShop from "@/helpers/productAgeByShop";
+import productCategory from "@/helpers/productCategory";
+import uploadImage from "@/helpers/UploadImage";
 
 const EditProduct = ({ onClose,getAllProducts,product }) => {
 
@@ -98,7 +98,7 @@ const EditProduct = ({ onClose,getAllProducts,product }) => {
   };
 
   return (
-    <div className="fixed inset-0 flex justify-center items-center bg-slate-800 bg-opacity-75 z-50">
+    <div className="fixed inset-0 flex justify-center items-center bg-slate-800 bg-opacity-75 z-[4000]">
       <div className="bg-black text-white p-4 rounded w-full max-w-2xl max-h-[80%] overflow-auto">
         <div className="flex justify-between items-center mb-4">
           <h1 className="font-bold text-lg">Edit Product</h1>

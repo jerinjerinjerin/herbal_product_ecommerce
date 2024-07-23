@@ -1,20 +1,12 @@
 import React, { useState } from "react";
-import axios from 'axios';
-import {toast} from 'react-toastify'
-import backendDomin from '../commen/api';
-import ROLE from "../commen/role";
+import axios from "axios";
+import { toast } from "react-toastify";
+import backendDomin from "../../commen/api";
+import ROLE from "../../commen/role";
 import { IoMdClose } from "react-icons/io";
 import { Button } from "@/components/ui/button";
 
-const ChangeUserRole = ({
-  userId,
-  name,
-  email,
-  role,
-  onClose,
-  callFunc,
-  
-}) => {
+const ChangeUserRole = ({ userId, name, email, role, onClose, callFunc }) => {
   const [userRole, setUserRole] = useState(role);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -31,14 +23,13 @@ const ChangeUserRole = ({
       const response = await axios.put(
         `${backendDomin}/api/update-user`,
         {
-          
           role: userRole,
-          userId
+          userId,
         },
         {
           withCredentials: true,
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
         }
       );
@@ -47,12 +38,13 @@ const ChangeUserRole = ({
         toast(response.data.message);
         callFunc();
         onClose(); // Close the modal after successful update
-       
       } else {
         setError(response.data.message);
       }
     } catch (error) {
-      setError(error.response?.data?.message || error.message || "An error occurred");
+      setError(
+        error.response?.data?.message || error.message || "An error occurred"
+      );
     } finally {
       setLoading(false);
     }
@@ -62,14 +54,20 @@ const ChangeUserRole = ({
     <div className="fixed left-0 right-0 top-0 bottom-0 w-full h-full z-10 flex justify-center items-center bg-gray-500 bg-opacity-50">
       <div className="bg-gray-950 shadow-sm text-white shadow-green-300 p-4 w-full max-w-sm rounded-md">
         <button className="block ml-auto" onClick={onClose} disabled={loading}>
-          <IoMdClose className="hover:text-red-600 text-red-900  font-semibold text-xl"/>
+          <IoMdClose className="hover:text-red-600 text-red-900  font-semibold text-xl" />
         </button>
-        <h1 className="pb-4 text-lg font-medium text-white">Change User Role</h1>
+        <h1 className="pb-4 text-lg font-medium text-white">
+          Change User Role
+        </h1>
         <p>Name: {name}</p>
         <p>Email: {email}</p>
         <div className="flex items-center justify-between my-4">
           <p>Role:</p>
-          <select className="border px-4 py-1 bg-white text-black" value={userRole} onChange={handleOnChangeSelect}>
+          <select
+            className="border px-4 py-1 bg-white text-black"
+            value={userRole}
+            onChange={handleOnChangeSelect}
+          >
             {Object.values(ROLE).map((el) => (
               <option key={el} value={el}>
                 {el}

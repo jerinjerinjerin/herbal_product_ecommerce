@@ -40,7 +40,7 @@ const AdminPanel = () => {
         <div className="md:w-full w-[50%]">
           <nav className="grid p-4 gap-5">
           <Link to="/admin-panel/all-users" className={`px-2 py-1 text-center rounded-sm border hover:bg-green-400 border-green-600 ${getLinkClassName('/admin-panel/all-users')}`}>All Users</Link>
-          <Link to="/admin-panel/all-products" className={`px-2 py-1 text-center rounded-md border hover:bg-green-400 border-green-600 ${getLinkClassName('/admin-panel/all-products')}`}>Products</Link>
+          <Link to="/admin-panel/admin-all-products" className={`px-2 py-1 text-center rounded-md border hover:bg-green-400 border-green-600 ${getLinkClassName('/admin-panel/admin-all-products')}`}>Products</Link>
           </nav>
         </div>
       </aside>

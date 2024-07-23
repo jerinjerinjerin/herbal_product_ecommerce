@@ -1,7 +1,7 @@
 import backendDomin from "@/commen/api";
 import { Button } from "@/components/ui/button";
-import AllProductAdminList from "@/compounts/AllProductAdminList";
-import UploadProduct from "@/compounts/UploadProduct";
+import AllProductAdminList from "@/compounts/admin/AllProductAdminList";
+import UploadProduct from "@/compounts/admin/UploadProduct";
 import { setProductDetials } from "@/redux/productSlice";
 import axios from "axios";
 import React, { useMemo, useState } from "react";
@@ -42,7 +42,7 @@ const AllProducts = () => {
       );
       if (response.data.success) {
         getAllProducts();
-        toast.success(response.data.message)
+        toast.success(response.data.message);
       } else {
         console.log("Error deleting product");
       }
@@ -50,9 +50,6 @@ const AllProducts = () => {
       console.log(error);
     }
   };
-
-  
-
 
   // useMemo to call getAllProducts only once
   useMemo(() => {
@@ -65,7 +62,9 @@ const AllProducts = () => {
   return (
     <div className="overflow-hidden">
       <div className="bg-slate-900 bg-opacity-40 py-2 px-4 flex-row gap-2 flex md:justify-between items-center overflow-x-hidden">
-        <h2 className="font-bold md:text-lg text-[15px] text-white text-nowrap">all Product</h2>
+        <h2 className="font-bold md:text-lg text-[15px] text-white text-nowrap">
+          all Product
+        </h2>
         <Button
           className="border hover:bg-green-600  bg-transparent md:text-lg text-sm text-white border-green-600 md:py-2 md:px-4"
           onClick={handleOpen}
@@ -79,7 +78,7 @@ const AllProducts = () => {
       )}
 
       <AllProductAdminList
-        getAllProducts={getAllProducts} 
+        getAllProducts={getAllProducts}
         deleteProduct={deleteProduct}
       />
     </div>

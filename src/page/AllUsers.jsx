@@ -4,7 +4,7 @@ import moment from "moment";
 import { FaEdit } from "react-icons/fa";
 import { motion } from "framer-motion";
 import backendDomin from "@/commen/api";
-import ChangeUserRole from "@/compounts/ChangeUserRole";
+import ChangeUserRole from "@/compounts/admin/ChangeUserRole";
 
 const AllUsers = () => {
   const [allUsers, setAllUsers] = useState([]);

@@ -1,27 +1,30 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import Home from "./page/Home";
-import ViewProduct from "./compounts/view-product";
-import FilterProduct from "./compounts/FilterProduct";
-import Footer from "./compounts/Footer";
-import CopyRight from "./compounts/CopyRight";
-import Navbar from "./compounts/Navbar";
-import SocialMedia from "./compounts/Socials";
-import Checkout from "./compounts/Checkout";
-import Cart from "./compounts/Cart";
 import { useDispatch } from "react-redux";
 import backendDomin from "./commen/api";
 import { setUserDetials } from "./redux/userSlice";
 import { useEffect } from "react";
 import axios from "axios";
-import Login from "./page/Login";
-import SignUp from "./page/SignUp";
-import AllUsers from "./page/AllUsers";
-import AdminPanel from "./page/AdminPanel";
-import AllProducts from "./page/AllProducts";
 import Context from "./context/context";
-import ViewAdminProduct from "./compounts/ViewAdminProduct";
+import Navbar from "./compounts/navbar/Navbar";
+import SignUp from "./page/SignUp";
+import Login from "./page/Login";
+import AdminPanel from "./page/AdminPanel";
+import AllUsers from "./page/AllUsers";
+import AllProducts from "./page/AllProducts";
+import ViewAdminProduct from "./compounts/admin/ViewAdminProduct";
+import FilterProduct from "./compounts/products/FilterProduct";
+import ViewProduct from "./compounts/products/view-product";
+import Checkout from "./compounts/cart/Checkout";
+import Cart from "./compounts/cart/Cart";
+import SocialMedia from "./compounts/footer/Socials";
+import Footer from "./compounts/footer/Footer";
+import CopyRight from "./compounts/footer/CopyRight";
+import Home from "./page/Home";
+import ViewAllProduct from "./compounts/products/ViewAllProduct";
+import SignInPage from "./auth/sign-in";
+import SignUpPage from "./auth/sign-up";
 
 function App() {
   const dispatch = useDispatch();
@@ -49,23 +52,29 @@ function App() {
         <BrowserRouter>
           <Context.Provider value={{ fetchUserDetials }}>
             <ToastContainer position="top-center" />
-            <div className="w-full z-10 sticky bg-slate-900 top-0 overflow-x-hidden shadow-md shadow-green-200">
+            <div className="w-full z-[1000] sticky bg-slate-900 top-0 overflow-x-hidden shadow-md shadow-green-200">
               <Navbar />
             </div>
             <main className="min-h-[calc(100vh-120px)]">
               <Routes>
+              <Route path="/auth/sign-in" element={<SignInPage />} />
+              <Route path="/auth/sign-up" element={<SignUpPage />} />
                 <Route path="/signup" element={<SignUp />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/" element={<Home />} />
                 <Route path="/admin-panel/" element={<AdminPanel />}>
                   <Route path="all-users" element={<AllUsers />} />
-                  <Route path="all-products" element={<AllProducts />} />
-                  <Route path="view-admin-product/:id" element={<ViewAdminProduct/>}/>
+                  <Route path="admin-all-products" element={<AllProducts />} />
+                  <Route
+                    path="view-admin-product/:id"
+                    element={<ViewAdminProduct />}
+                  />
                 </Route>
                 <Route path="/filter-product" element={<FilterProduct />} />
                 <Route path="/view-product/:id" element={<ViewProduct />} />
                 <Route path="/checkout" element={<Checkout />} />
                 <Route path="/cart" element={<Cart />} />
+                <Route path="/all-products-shop" element={<ViewAllProduct/>} />
               </Routes>
             </main>
             <SocialMedia />

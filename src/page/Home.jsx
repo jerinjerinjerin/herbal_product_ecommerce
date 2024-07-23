@@ -1,13 +1,12 @@
+import BestContent from "@/compounts/hero/BestContent";
+import Hero from "@/compounts/hero/Hero";
+import MobileAppDownload from "@/compounts/hero/MobileAppDownload";
+import Order from "@/compounts/hero/Order";
+import ShopReview from "@/compounts/hero/ShopReview";
+import Slider from "@/compounts/hero/Slider";
+import Filter from "@/compounts/products/Filter";
+import FilterProduct from "@/compounts/products/FilterProduct";
 import React from "react";
-import Slider from "../compounts/Slider";
-import Hero from "@/compounts/Hero";
-import Filter from "@/compounts/Filter";
-import Order from "@/compounts/Order";
-import MobileAppDownload from "@/compounts/MobileAppDownload";
-import ShopReview from "@/compounts/ShopReview";
-import FilterProduct from "@/compounts/FilterProduct";
-import BestContent from "@/compounts/BestContent";
-import SocialMedia from "@/compounts/Socials";
 
 const Home = () => {
   return (

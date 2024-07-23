@@ -1,6 +1,8 @@
 import { IoMdArrowDropdown } from "react-icons/io";
-import { FaCar, FaUser, FaHeart } from "react-icons/fa";
+import { FaCar, FaHeart } from "react-icons/fa";
 import { IoBag } from "react-icons/io5";
+import profileImage from '../assets/uploadProfile.png';
+
 import {
   FaFacebook,
   FaInstagram,
@@ -926,7 +928,7 @@ export const ProductReviewsComment = [
     title: 'Excellent Product!',
     date: '2024-06-01',
     text: 'This herbal product has greatly improved my health. Highly recommend it!',
-    profileImage: IoBag,
+    profileImage: profileImage,
   },
   {
     username: 'Bob',
@@ -934,7 +936,7 @@ export const ProductReviewsComment = [
     title: 'Very Good',
     date: '2024-06-02',
     text: 'I found this product to be very effective. Will buy again.',
-    profileImage: IoBag,
+    profileImage: profileImage,
   },
   {
     username: 'Charlie',
@@ -942,7 +944,7 @@ export const ProductReviewsComment = [
     title: 'It\'s okay',
     date: '2024-06-03',
     text: 'The product is average, not too bad but not great either.',
-    profileImage: IoBag,
+    profileImage: profileImage,
   },
   {
     username: 'David',
@@ -950,7 +952,7 @@ export const ProductReviewsComment = [
     title: 'Best Herbal Supplement',
     date: '2024-06-04',
     text: 'I have tried many herbal products, and this one is the best by far.',
-    profileImage: IoBag,
+    profileImage: profileImage,
   },
   {
     username: 'Eva',
@@ -958,7 +960,7 @@ export const ProductReviewsComment = [
     title: 'Works well',
     date: '2024-06-05',
     text: 'It works well for me. I feel more energetic and healthy.',
-    profileImage: IoBag,
+    profileImage: profileImage,
   },
   {
     username: 'Frank',
@@ -966,7 +968,7 @@ export const ProductReviewsComment = [
     title: 'Not effective',
     date: '2024-06-06',
     text: 'I did not notice any improvement in my condition after using this product.',
-    profileImage: IoBag,
+    profileImage: profileImage,
   },
   {
     username: 'Grace',
@@ -974,7 +976,7 @@ export const ProductReviewsComment = [
     title: 'Good value for money',
     date: '2024-06-07',
     text: 'This product is good value for money and does what it claims.',
-    profileImage: IoBag,
+    profileImage: profileImage,
   },
   {
     username: 'Hank',
@@ -982,7 +984,7 @@ export const ProductReviewsComment = [
     title: 'Highly recommend',
     date: '2024-06-08',
     text: 'Highly recommend this herbal product to anyone looking for natural remedies.',
-    profileImage: IoBag,
+    profileImage: profileImage,
   },
   {
     username: 'Ivy',
@@ -990,7 +992,7 @@ export const ProductReviewsComment = [
     title: 'Average',
     date: '2024-06-09',
     text: 'The product is average. It did not work as expected for me.',
-    profileImage: IoBag,
+    profileImage: profileImage,
   },
   {
     username: 'Jack',
@@ -998,7 +1000,7 @@ export const ProductReviewsComment = [
     title: 'Satisfied',
     date: '2024-06-10',
     text: 'I am satisfied with the results of this product. It is worth trying.',
-    profileImage: IoBag,
+    profileImage: profileImage,
   }
 ];
 

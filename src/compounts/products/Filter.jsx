@@ -1,36 +1,43 @@
 import React, { useState, useEffect } from "react";
 import Slider from "react-slick";
 import { motion, AnimatePresence, useAnimation } from "framer-motion";
-import { Button } from "../components/ui/button";
-import { PiHandbagSimpleFill } from "react-icons/pi";
-import { MostBought, BestOffers, MensHelth, WomenHelth } from "../data/data";
+import { Button } from "../../components/ui/button";
+import {
+  BrandImage,
+  CategoryData,
+  priceData,
+  ShopAgeData,
+} from "../../data/data";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import StarRating from "./StarRating";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
-import { Link } from "react-router-dom";
-import { IoIosEye } from "react-icons/io";
 
-const NextArrow = ({ onClick }) => (
-  <div
-    className="absolute top-1/2 right-0 transform -translate-y-1/2 z-10 cursor-pointer"
-    onClick={onClick}
-  >
-    <FaArrowRight className="p-2 text-white hover:text-green-600 hover:border-green-600 rounded-full bg-transparent border text-3xl" />
-  </div>
-);
+const NextArrow = (props) => {
+  const { onClick } = props;
+  return (
+    <div
+      className="absolute  top-1/2 right-0 transform -translate-y-1/2 z-10 cursor-pointer"
+      onClick={onClick}
+    >
+      <FaArrowRight className="p-2 text-white hover:text-green-600 hover:border-green-600 rounded-full bg-transparent border text-3xl" />
+    </div>
+  );
+};
 
-const PrevArrow = ({ onClick }) => (
-  <div
-    className="absolute top-1/2 left-0 transform -translate-y-1/2 z-10 cursor-pointer"
-    onClick={onClick}
-  >
-    <FaArrowLeft className="p-2 text-white hover:text-green-600 hover:border-green-600 rounded-full bg-transparent border text-3xl" />
-  </div>
-);
+const PrevArrow = (props) => {
+  const { onClick } = props;
+  return (
+    <div
+      className="absolute  top-1/2 left-0 transform -translate-y-1/2 z-10 cursor-pointer"
+      onClick={onClick}
+    >
+      <FaArrowLeft className="p-2 text-white hover:text-green-600 hover:border-green-600 rounded-full bg-transparent border text-3xl" />
+    </div>
+  );
+};
 
-const FilterProduct = () => {
-  const [currentTab, setCurrentTab] = useState("Most bought");
+const Filter = () => {
+  const [currentTab, setCurrentTab] = useState("age");
   const [sliderSettings, setSliderSettings] = useState({
     dots: true,
     infinite: true,
@@ -77,13 +84,23 @@ const FilterProduct = () => {
       controls.start({
         opacity: 1,
         y: 0,
-        transition: { duration: 0.5, delay: 1 },
+        transition: { duration: 0.5, delay: 1 }, // Delay after scroll
       });
     };
 
     window.addEventListener("scroll", scrollHandler);
     return () => window.removeEventListener("scroll", scrollHandler);
   }, [controls]);
+
+  const shakeAnimation = {
+    x: [-10, 10, -10, 10, 0],
+    transition: { duration: 0.5 },
+  };
+
+  const highImpactAnimation = {
+    scale: [1, 1.2, 1],
+    transition: { duration: 0.5 },
+  };
 
   const tabContentVariants = {
     hidden: { x: "-100vw", opacity: 0 },
@@ -104,9 +121,9 @@ const FilterProduct = () => {
   };
 
   const renderItems = (items) => {
-    return items.map((item) => (
+    return items.map((item, index) => (
       <motion.div
-        key={item.id}
+        key={index}
         className="relative p-2"
         whileHover={{ scale: 1.05, transition: { duration: 0.3 } }}
       >
@@ -116,26 +133,10 @@ const FilterProduct = () => {
           </h1>
           <div className="flex justify-center items-center">
             <img
-              src={item.images[0].src}
-              className="w-[350px] rounded-md border-[3px] border-green-600 h-[400px] object-cover"
+              src={item.imgSrc}
+              className="w-[350px] rounded-md border-[3px] border-green-600 border- h-[400px] object-cover"
               alt="filter-images"
             />
-          </div>
-          <div className="bg-opacity-30 rounded-lg p-5 space-y-2 group overflow-hidden">
-            <div className="flex xl:w-[100%] lg:w-[100%] md:w-[100%] w-[100%] rounded-md px-2 py-2 mx-auto justify-between items-center">
-              <div>
-                {item.disCoundPrice ? (
-                  <span className="text-green-600 font-semibold">
-                    <span className="text-white">price</span>{" "}
-                    <del className="text-red-500"> {item.price}</del>{" "}
-                    <span className="text-[20px]">{item.disCoundPrice}</span>
-                  </span>
-                ) : (
-                  item.price
-                )}
-              </div>
-              <StarRating rating={item.rating} />
-            </div>
           </div>
           <motion.div
             className="absolute top-0 left-0 w-full h-full flex flex-col justify-center items-center bg-black bg-opacity-75 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
@@ -156,22 +157,9 @@ const FilterProduct = () => {
               animate={{ y: 0, opacity: 1 }}
               transition={{ duration: 0.5, ease: "easeOut", delay: 0.3 }}
             >
-              <div className="flex flex-col gap5">
-                <Button className="bg-black border border-green-600 hover:border-white bg-opacity-70 flex justify-start items-center gap-1 pb-2">
-                  Add to bag{" "}
-                  <span>
-                    <PiHandbagSimpleFill className="text-white" />
-                  </span>
-                </Button>
-                <Link to={`/view-product/${item.id}`}>
-                  <Button className="bg-black border border-green-600 hover:border-white bg-opacity-70 mt-3 flex justify-start items-center gap-1">
-                    View Product{" "}
-                    <span>
-                    <IoIosEye className="text-white"/>
-                    </span>
-                  </Button>
-                </Link>
-              </div>
+              <Button className="bg-black bg-opacity-70 border border-green-600 hover:border-white">
+                Shop Now
+              </Button>
             </motion.div>
           </motion.div>
         </div>
@@ -181,6 +169,23 @@ const FilterProduct = () => {
 
   return (
     <div className="py-5">
+      <motion.h1
+        initial={{ opacity: 0, y: -20 }}
+        animate={controls}
+        className="bg-transparent pb-[80px] md:px-[80px] flex-col flex md:flex-row h-[50px] pt-10 text-white md:text-xl text-[10px] font-bold w-[100%] mx-auto md:mx-0 text-center md:text-left"
+      >
+        Filter and shop your essential products . Enjoy{" "}
+        <motion.span
+          initial={{ scale: 0 }}
+          animate={highImpactAnimation}
+          whileHover={{ scale: 1.2 }}
+          className="text-green-600 text-2xl font-bold"
+        >
+          <motion.span animate={shakeAnimation}>25%</motion.span>
+        </motion.span>{" "}
+        discount on all items today only!
+      </motion.h1>
+
       <motion.div
         initial={{ opacity: 0 }}
         animate={{
@@ -196,13 +201,8 @@ const FilterProduct = () => {
         <div className="container mx-auto">
           <div className="flex flex-col md:gap-[100px] mb-[10px]">
             <div>
-              <div className="flex bg-black flex-col gap-3 pb-2 md:pb-0 md:flex-row w-full md:max-w-[30%] max-w-[53%] mx-auto">
-                {[
-                  "Most bought",
-                  "Best offers",
-                  "Mens helth",
-                  "Women helth",
-                ].map((tab) => (
+              <div className="flex bg-black flex-col gap-3 pb-2 md:pb-0  md:flex-row w-full md:max-w-[30%] max-w-[53%] mx-auto ">
+                {["age", "category", "price", "brand"].map((tab) => (
                   <motion.div
                     whileTap={{ scale: 0.9 }}
                     key={tab}
@@ -212,13 +212,13 @@ const FilterProduct = () => {
                   >
                     <Button
                       onClick={() => handleTabChange(tab)}
-                      className={`w-full border border-white bg-transparent${
+                      className={`w-full bg-transparent border ${
                         currentTab === tab
-                          ? "text-white border border-white font-semibold bg-green-700"
-                          : "text-white border-[2px] border-green-600 "
+                          ? "text-white border font-semibold bg-green-700"
+                          : "text-white border-green-600"
                       }`}
                     >
-                      {tab.charAt(0).toUpperCase() + tab.slice(1)}
+                      {tab.charAt(0).toUpperCase() + tab.slice(1)} By shop
                     </Button>
                   </motion.div>
                 ))}
@@ -234,24 +234,24 @@ const FilterProduct = () => {
                   exit="exit"
                   variants={tabContentVariants}
                 >
-                  {currentTab === "Most bought" && (
+                  {currentTab === "age" && (
                     <Slider {...sliderSettings} className="px-6">
-                      {renderItems(MostBought)}
+                      {renderItems(ShopAgeData)}
                     </Slider>
                   )}
-                  {currentTab === "Best offers" && (
+                  {currentTab === "category" && (
                     <Slider {...sliderSettings} className="px-6">
-                      {renderItems(BestOffers)}
+                      {renderItems(CategoryData)}
                     </Slider>
                   )}
-                  {currentTab === "Mens helth" && (
+                  {currentTab === "price" && (
                     <Slider {...sliderSettings} className="px-6">
-                      {renderItems(MensHelth)}
+                      {renderItems(priceData)}
                     </Slider>
                   )}
-                  {currentTab === "Women helth" && (
+                  {currentTab === "brand" && (
                     <Slider {...sliderSettings} className="px-6">
-                      {renderItems(WomenHelth)}
+                      {renderItems(BrandImage)}
                     </Slider>
                   )}
                 </motion.div>
@@ -264,4 +264,4 @@ const FilterProduct = () => {
   );
 };
 
-export default FilterProduct;
+export default Filter;

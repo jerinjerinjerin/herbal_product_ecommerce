@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { SliderImageData } from "../data/data";
-import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
+import { SliderImageData } from "../../data/data";
+import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import { Button } from "@/components/ui/button";
 
 const Slider = () => {
   const [[current, direction], setCurrent] = useState([0, 0]);
-  const imageIndex = (current + SliderImageData.length) % SliderImageData.length;
+  const imageIndex =
+    (current + SliderImageData.length) % SliderImageData.length;
   const [isAnimating, setIsAnimating] = useState(false);
-  const [bgColor, setBgColor] = useState('black'); // Initial background color
+  const [bgColor, setBgColor] = useState("black"); // Initial background color
   const [shouldShake, setShouldShake] = useState(false); // State for shake animation
   const [dotClicked, setDotClicked] = useState(false); // State for dot click animation
 
@@ -46,7 +47,7 @@ const Slider = () => {
       transition: {
         x: { type: "spring", stiffness: 300, damping: 30, duration: 2 },
         opacity: { duration: 2 },
-      }
+      },
     },
     exit: (direction) => ({
       x: 0,
@@ -68,7 +69,11 @@ const Slider = () => {
 
   const handleAnimationEnd = () => {
     setIsAnimating(false);
-    setBgColor(getComputedStyle(document.documentElement).getPropertyValue(`--color-${imageIndex}`));
+    setBgColor(
+      getComputedStyle(document.documentElement).getPropertyValue(
+        `--color-${imageIndex}`
+      )
+    );
   };
 
   const handleDotClick = (index) => {
@@ -85,19 +90,26 @@ const Slider = () => {
     <div
       className=" w-full md:h-screen h-[400px] flex items-center justify-center overflow-hidden"
       style={{
-        backgroundColor: isAnimating ? 'transparent' : bgColor,
-        animation: isAnimating ? 'rainbow .5s linear infinite' : 'none',
+        backgroundColor: isAnimating ? "transparent" : bgColor,
+        animation: isAnimating ? "rainbow .5s linear infinite" : "none",
       }}
     >
       <div className="w-[90%] h-[80%]  mx-auto my-auto relative flex items-center justify-center">
-        <AnimatePresence initial={false} className="h-full" custom={direction} onExitComplete={handleAnimationEnd}>
+        <AnimatePresence
+          initial={false}
+          className="h-full"
+          custom={direction}
+          onExitComplete={handleAnimationEnd}
+        >
           <motion.div
             key={current}
             className="absolute inset-0 w-full h-full flex items-center justify-center"
             custom={direction}
             variants={variants}
             initial="enter"
-            animate={dotClicked ? "dotClick" : (shouldShake ? "shakeVertical" : "center")}
+            animate={
+              dotClicked ? "dotClick" : shouldShake ? "shakeVertical" : "center"
+            }
             exit="exit"
           >
             <img
@@ -108,10 +120,18 @@ const Slider = () => {
             <div className="relative z-5  p-4 bg-black text-white bg-opacity-75 rounded-lg">
               <motion.div
                 className="content-container flex flex-col gap-5"
-                animate={dotClicked ? "dotClick" : (shouldShake ? "shakeVertical" : "center")}
+                animate={
+                  dotClicked
+                    ? "dotClick"
+                    : shouldShake
+                    ? "shakeVertical"
+                    : "center"
+                }
               >
                 {SliderImageData[imageIndex].content}
-                <Button className="border-[2px] border-green-600 hover:border-white bg-transparent hover:bg-green-600">Go to shop</Button>
+                <Button className="border-[2px] border-green-600 hover:border-white bg-transparent hover:bg-green-600">
+                  Go to shop
+                </Button>
               </motion.div>
             </div>
           </motion.div>
@@ -137,7 +157,9 @@ const Slider = () => {
         {SliderImageData.map((_, index) => (
           <motion.button
             key={index}
-            className={`w-4 h-4 rounded-full hover:bg-white ${index === imageIndex ? 'bg-green-500' : 'bg-gray-400'}`}
+            className={`w-4 h-4 rounded-full hover:bg-white ${
+              index === imageIndex ? "bg-green-500" : "bg-gray-400"
+            }`}
             onClick={() => handleDotClick(index)}
             whileHover={{ scale: 1.2 }}
             whileTap={{ scale: 0.8 }}

@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { NavItem_Left, NavItem_Right } from "../data/data";
+import { NavItem_Left, NavItem_Right } from "../../data/data";
 import { BsSearch } from "react-icons/bs";
 import {
   Sheet,
   SheetTrigger,
   SheetContent,
   SheetTitle,
-} from "../components/ui/sheet";
+} from "../../components/ui/sheet";
 import { MenuIcon } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -17,6 +17,7 @@ import { CiLogout } from "react-icons/ci";
 import axios from "axios";
 import { setUserDetials } from "@/redux/userSlice";
 import { Button } from "@/components/ui/button";
+import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/clerk-react";
 
 const Navbar = () => {
   const user = useSelector((state) => state.user.user);
@@ -49,8 +50,14 @@ const Navbar = () => {
   }, [user]);
 
   return (
-    <nav className="justify-between items-center flex lg:px-5 md:px-2 h-[100px]">
-      <div className="px-10 md:px-0"></div>
+    <nav className="justify-between items-center flex lg:px-5 z-[10] md:px-2 h-[100px]">
+      <div className="px-10 md:px-0">
+        <Link to={'/'}>
+        <img 
+          className="w-16 h-16 object-cover rounded-full"
+          src="https://dynamic.brandcrowd.com/asset/logo/a2c58d20-7c6f-4e8f-ab27-206467df00e8/logo-search-grid-1x?logoTemplateVersion=1&v=637786131320670000" alt="logoimage" />
+        </Link>
+      </div>
       <div className="space-x-5 hidden lg:flex">
         {NavItem_Left.map((item, index) => (
           <div
@@ -78,6 +85,13 @@ const Navbar = () => {
       {/* admin panel */}
       <div className="hidden lg:space-x-4 space-x-2 lg:flex">
         <div className="relative flex justify-center">
+        <SignedOut >
+        <SignInButton className="text-white" mode="modal" 
+        />
+      </SignedOut>
+      <SignedIn className="text-white">
+        <UserButton />
+      </SignedIn>
           {user?.data?._id && (
             <div className="text-2xl cursor-pointer" onClick={handleChangeMenu}>
               {user && (
@@ -97,7 +111,7 @@ const Navbar = () => {
               {user?.data?.role === "ADMIN" && (
                 <nav>
                   <Link
-                    to={"/admin-panel/all-products"}
+                    to={"/admin-panel/admin-all-products"}
                     className="whitespace-nowrap hover:text-green-600 p-2 z-50"
                   >
                     Admin Panel
