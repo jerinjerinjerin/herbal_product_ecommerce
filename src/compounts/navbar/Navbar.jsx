@@ -85,13 +85,14 @@ const Navbar = () => {
       {/* admin panel */}
       <div className="hidden lg:space-x-4 space-x-2 lg:flex">
         <div className="relative flex justify-center">
-        <SignedOut >
-        <SignInButton className="text-white" mode="modal" 
-        />
-      </SignedOut>
-      <SignedIn className="text-white">
-        <UserButton />
-      </SignedIn>
+
+        {/* <SignedOut > */}
+        {/* <SignInButton className="text-white" mode="modal" /> */}
+      {/* </SignedOut> */}
+      {/* <SignedIn className="text-white"> */}
+        {/* <UserButton /> */}
+      {/* </SignedIn> */}
+
           {user?.data?._id && (
             <div className="text-2xl cursor-pointer" onClick={handleChangeMenu}>
               {user && (

@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import StarRating from "./StarRating";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 
+
 const NextArrow = (props) => {
   const { onClick } = props;
   return (

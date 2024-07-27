@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const navigater = useNavigate();
-  const { fetchUserDetails } = useContext(Context);
+  const { fetchUserDetials } = useContext(Context);
   const [data, setData] = useState({
     email: "",
     password: "",
@@ -42,7 +42,7 @@ const Login = () => {
         `${backendDomain}/api/login-user`,
         data,
         {
-          withCredentials: "include",
+          withCredentials: "include"
         }
       );
 
@@ -51,7 +51,7 @@ const Login = () => {
       }
 
       navigater("/");
-      fetchUserDetails();
+      fetchUserDetials();
     } catch (error) {
       toast.error(error.response.data.message);
     }

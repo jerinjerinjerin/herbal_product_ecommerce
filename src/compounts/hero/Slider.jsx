@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { SliderImageData } from "../../data/data";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 const Slider = () => {
   const [[current, direction], setCurrent] = useState([0, 0]);
@@ -129,9 +130,13 @@ const Slider = () => {
                 }
               >
                 {SliderImageData[imageIndex].content}
+                <Link className="w-full mx-auto text-center" 
+                to={'/go-to-shop'}>
+
                 <Button className="border-[2px] border-green-600 hover:border-white bg-transparent hover:bg-green-600">
                   Go to shop
                 </Button>
+                </Link>
               </motion.div>
             </div>
           </motion.div>

@@ -4,8 +4,8 @@ import MobileAppDownload from "@/compounts/hero/MobileAppDownload";
 import Order from "@/compounts/hero/Order";
 import ShopReview from "@/compounts/hero/ShopReview";
 import Slider from "@/compounts/hero/Slider";
-import Filter from "@/compounts/products/Filter";
-import FilterProduct from "@/compounts/products/FilterProduct";
+import FilterBrand from "@/compounts/products/FilterBrand";
+import FilterProduct from "@/compounts/products/FilterCategory";
 import React from "react";
 
 const Home = () => {
@@ -25,7 +25,7 @@ const Home = () => {
       </div>
       {/* filter */}
       <div className="w-full bg-black overflow-x-hidden">
-        <Filter />
+        <FilterBrand />
       </div>
       {/* Product filter */}
       <div className="bg-black">

@@ -1,76 +1,71 @@
+import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { ProductReviewsComment } from "@/data/data";
-import React, { useState, useEffect } from "react";
-import { motion, useAnimation } from "framer-motion";
-import { useInView } from "react-intersection-observer";
-
-const renderStars = (rating) => {
-  return (
-    <span>
-      {"★".repeat(rating)}
-      {"☆".repeat(5 - rating)}
-    </span>
-  );
-};
-
-const Review = ({ review }) => {
-  const controls = useAnimation();
-  const { ref, inView } = useInView({
-    triggerOnce: false,
-    threshold: 0.1,
-  });
-
-  useEffect(() => {
-    if (inView) {
-      controls.start({
-        opacity: 1,
-        y: 0,
-        transition: { duration: 0.5, ease: "easeOut" },
-      });
-    } else {
-      controls.start({
-        opacity: 0,
-        y: 50,
-      });
-    }
-  }, [inView, controls]);
-
-  return (
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 0, y: 50 }}
-      animate={controls}
-      className="review "
-    >
-      <div className="review-header">
-        <div className="flex hap-2 items-center py-3">
-          <span className="review-username">{review.username}</span>
-          <img src={review.profileImage} alt="product_review" className="w-8 h-8" />
-        </div>
-        <div className="review-rating">{renderStars(review.rating)}</div>
-      </div>
-      <div className="review-details">
-        <strong className="text-white text-[17px]">{review.title}</strong>
-        <span className="review-date text-slate-400">{review.date}</span>
-      </div>
-      <div className="review-text text-white">{review.text}</div>
-    </motion.div>
-  );
-};
+import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import ReviewForm from "./ReviewForm";
+import Review from "./Review";
+import backendDomin from "@/commen/api";
+import { setUserDetials } from "@/redux/userSlice";
 
 const ProductReviews = () => {
   const [showAllReviews, setShowAllReviews] = useState(false);
+  const [openForm, setOpenForm] = useState(false);
+  const user = useSelector((state) => state.user.user);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const toggleShowReviews = () => {
     setShowAllReviews(!showAllReviews);
   };
 
+  const handleOpen = () => {
+    if (user) {
+      setOpenForm(true);
+    } else {
+      navigate("/login");
+    }
+  };
+
+  const fetchUserDetails = async () => {
+    try {
+      const response = await axios.get(`${backendDomin}/api/user-detials`, {
+        withCredentials: true,
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      });
+  
+      if (response.data.data) {
+        dispatch(setUserDetials(response.data.data));
+        console.log('response data', response.data.data);
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  useEffect(() => {
+    fetchUserDetails();
+  }, []);
+
+  useEffect(() => {
+    if (!user && openForm) {
+      setOpenForm(false);
+    }
+  }, [user, openForm]);
+
   return (
     <div className="product-reviews p-1 bg-slate-800 px-10 py-10 rounded-md bg-opacity-20 border-[2px] border-green-600">
       <div className="flex justify-between py-4">
         <h2 className="text-xl text-gray-400">Product Reviews</h2>
-        <Button className="bg-transparent border border-green-600 text-white rounded-md hover:bg-green-600">
-          Add Review
+
+        <Button
+          onClick={handleOpen}
+          className="bg-transparent border border-green-600 text-white rounded-md hover:bg-green-600"
+        >
+          {user ? "Add Review" : "Login to add review"}
         </Button>
       </div>
 
@@ -91,6 +86,7 @@ const ProductReviews = () => {
           </Button>
         </div>
       )}
+      {openForm && <ReviewForm onClose={() => setOpenForm(false)}  fetchUserDetails={fetchUserDetails}/>}
     </div>
   );
 };

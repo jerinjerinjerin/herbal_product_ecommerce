@@ -14,7 +14,7 @@ import AdminPanel from "./page/AdminPanel";
 import AllUsers from "./page/AllUsers";
 import AllProducts from "./page/AllProducts";
 import ViewAdminProduct from "./compounts/admin/ViewAdminProduct";
-import FilterProduct from "./compounts/products/FilterProduct";
+import FilterProduct from "./compounts/products/FilterCategory";
 import ViewProduct from "./compounts/products/view-product";
 import Checkout from "./compounts/cart/Checkout";
 import Cart from "./compounts/cart/Cart";
@@ -25,6 +25,7 @@ import Home from "./page/Home";
 import ViewAllProduct from "./compounts/products/ViewAllProduct";
 import SignInPage from "./auth/sign-in";
 import SignUpPage from "./auth/sign-up";
+import Filter from "./compounts/products/FilterBrand";
 
 function App() {
   const dispatch = useDispatch();
@@ -32,10 +33,15 @@ function App() {
   const fetchUserDetials = async () => {
     try {
       const response = await axios.get(`${backendDomin}/api/user-detials`, {
-        withCredentials: "include",
+        withCredentials: true, // Ensure this is set to true
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`, // Add token if used
+        },
       });
-      if (response.status === 200) {
+  
+      if (response.data.data) {
         dispatch(setUserDetials(response.data));
+        console.log('response data', response.data.data);
       }
     } catch (error) {
       console.log(error.message);
@@ -43,9 +49,12 @@ function App() {
   };
 
   useEffect(() => {
-    fetchUserDetials();
+    const token = localStorage.getItem('token');
+    if (token) {
+      fetchUserDetials();
+    }
   }, []);
-
+  
   return (
     <>
       <div className="">
@@ -57,8 +66,8 @@ function App() {
             </div>
             <main className="min-h-[calc(100vh-120px)]">
               <Routes>
-              <Route path="/auth/sign-in" element={<SignInPage />} />
-              <Route path="/auth/sign-up" element={<SignUpPage />} />
+                <Route path="/auth/sign-in" element={<SignInPage />} />
+                <Route path="/auth/sign-up" element={<SignUpPage />} />
                 <Route path="/signup" element={<SignUp />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/" element={<Home />} />
@@ -73,8 +82,9 @@ function App() {
                 <Route path="/filter-product" element={<FilterProduct />} />
                 <Route path="/view-product/:id" element={<ViewProduct />} />
                 <Route path="/checkout" element={<Checkout />} />
-                <Route path="/cart" element={<Cart />} />
-                <Route path="/all-products-shop" element={<ViewAllProduct/>} />
+                <Route path="/checkout" element={<Checkout />} />
+                <Route path="/go-to-shop" element={<Filter />} />
+                <Route path="/all-products-shop" element={<ViewAllProduct />} />
               </Routes>
             </main>
             <SocialMedia />
