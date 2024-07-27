@@ -2,28 +2,28 @@ import React, { useEffect, useState } from 'react';
 import { CgClose } from "react-icons/cg";
 import { Button } from '@/components/ui/button';
 import { motion, useAnimation } from 'framer-motion';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import backendDomin from '@/commen/api';
 
-const ReviewForm = ({ onClose, fetchUserDetails }) => {
-  const dispatch = useDispatch();
+const ReviewForm = ({ onClose, userId,name, profilePic, fetchReviews }) => {
   const user = useSelector((state) => state.user.user);
   const { id } = useParams();
   const [formData, setFormData] = useState({
     rating: '',
     title: '',
     comment: '',
-    userId: user?.data._id,
+    userId:userId,
+    name:name,
+    profilePic:profilePic,
     productId: id,
   });
 
   useEffect(() => {
     
-    
-  }, [dispatch]);
+  }, [user]);
 
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -73,8 +73,10 @@ const ReviewForm = ({ onClose, fetchUserDetails }) => {
       if (response) {
         toast.success(response.data.message);
         onClose();
+        fetchReviews();
       }
     } catch (error) {
+      console.error(error);
       const errorMessage = error.response?.data?.message || 'Failed to submit review. Please try again.';
       toast.error(errorMessage);
     } finally {

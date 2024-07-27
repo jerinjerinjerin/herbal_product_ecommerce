@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { motion, useAnimation } from "framer-motion";
 import { useInView } from "react-intersection-observer";
+import moment from "moment";
 
 const renderStars = (rating) => {
   return (
@@ -12,6 +13,7 @@ const renderStars = (rating) => {
 };
 
 const Review = React.memo(({ review }) => {
+
   const controls = useAnimation();
   const { ref, inView } = useInView({
     triggerOnce: false,
@@ -33,6 +35,7 @@ const Review = React.memo(({ review }) => {
     }
   }, [inView, controls]);
 
+
   return (
     <motion.div
       ref={ref}
@@ -41,19 +44,19 @@ const Review = React.memo(({ review }) => {
       className="review"
     >
       <div className="review-header flex items-center py-3">
-        <span className="review-username">{review.username}</span>
+         <span className="review-username text-white">{review.name}</span>
         <img
-          src={review.profileImage || "default-profile.png"}
+          src={review.profilePic}
           alt="product_review"
-          className="w-8 h-8 ml-2"
+          className="w-12 h-12 ml-2 object-cover rounded-full"
         />
       </div>
       <div className="review-rating">{renderStars(review.rating)}</div>
       <div className="review-details">
         <strong className="text-white text-[17px]">{review.title}</strong>
-        <span className="review-date text-slate-400">{review.date}</span>
+        <span className="review-date text-slate-400">{moment(review.createdAt).format("ll")}</span>
       </div>
-      <div className="review-text text-white">{review.text}</div>
+      <div className="review-text text-white">{review.comment}</div>
     </motion.div>
   );
 });

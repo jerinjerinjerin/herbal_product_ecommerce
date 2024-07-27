@@ -108,7 +108,6 @@ const SignUp = () => {
 
   return (
     <div id="signup">
-      <div className="grid md:grid-cols-2 grid-cols-1">
         <div className="mx-auto container p-4">
           <div className="bg-slate-900 bg-opacity-30 px-2 py-0 w-full max-w-md mx-auto">
             <div className="w-20 h-20 mx-auto relative overflow-hidden rounded-full">
@@ -238,13 +237,7 @@ const SignUp = () => {
             </p>
           </div>
         </div>
-        <div className="md:flex hidden  justify-start items-center">
-          <div className=" ">
-            <img src={indexImage} alt="" />
-          </div>
-        </div>
       </div>
-    </div>
   );
 };
 

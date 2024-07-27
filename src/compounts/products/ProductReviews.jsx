@@ -1,24 +1,41 @@
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { ProductReviewsComment } from "@/data/data";
-import { useSelector, useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import ReviewForm from "./ReviewForm";
 import Review from "./Review";
 import backendDomin from "@/commen/api";
-import { setUserDetials } from "@/redux/userSlice";
 
 const ProductReviews = () => {
   const [showAllReviews, setShowAllReviews] = useState(false);
   const [openForm, setOpenForm] = useState(false);
+  const [reviews, setReviews] = useState([]);
   const user = useSelector((state) => state.user.user);
-  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { id } = useParams();
 
   const toggleShowReviews = () => {
     setShowAllReviews(!showAllReviews);
   };
+
+  const fetchReviews = async () => {
+    try {
+      const response = await axios.get(`${backendDomin}/api/get-product-review/${id}`, {
+        withCredentials: "include",
+      });
+
+      if (response.data.reviews) {
+        setReviews(response.data.reviews);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchReviews();
+  }, [id]);
 
   const handleOpen = () => {
     if (user) {
@@ -27,28 +44,6 @@ const ProductReviews = () => {
       navigate("/login");
     }
   };
-
-  const fetchUserDetails = async () => {
-    try {
-      const response = await axios.get(`${backendDomin}/api/user-detials`, {
-        withCredentials: true,
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-        },
-      });
-  
-      if (response.data.data) {
-        dispatch(setUserDetials(response.data.data));
-        console.log('response data', response.data.data);
-      }
-    } catch (error) {
-      console.log(error.message);
-    }
-  };
-
-  useEffect(() => {
-    fetchUserDetails();
-  }, []);
 
   useEffect(() => {
     if (!user && openForm) {
@@ -60,7 +55,6 @@ const ProductReviews = () => {
     <div className="product-reviews p-1 bg-slate-800 px-10 py-10 rounded-md bg-opacity-20 border-[2px] border-green-600">
       <div className="flex justify-between py-4">
         <h2 className="text-xl text-gray-400">Product Reviews</h2>
-
         <Button
           onClick={handleOpen}
           className="bg-transparent border border-green-600 text-white rounded-md hover:bg-green-600"
@@ -69,14 +63,18 @@ const ProductReviews = () => {
         </Button>
       </div>
 
-      {ProductReviewsComment.slice(
-        0,
-        showAllReviews ? ProductReviewsComment.length : 5
-      ).map((review, index) => (
-        <Review key={index} review={review} />
-      ))}
+      {reviews.length > 0 ? (
+        reviews.slice(
+          0,
+          showAllReviews ? reviews.length : 5
+        ).map((review, index) => (
+          <Review key={index} review={review} />
+        ))
+      ) : (
+        <p className="text-gray-400">No reviews available for this product.</p>
+      )}
 
-      {ProductReviewsComment.length > 5 && (
+      {reviews.length > 5 && (
         <div className="show-more-button mt-5">
           <Button
             onClick={toggleShowReviews}
@@ -86,7 +84,16 @@ const ProductReviews = () => {
           </Button>
         </div>
       )}
-      {openForm && <ReviewForm onClose={() => setOpenForm(false)}  fetchUserDetails={fetchUserDetails}/>}
+      
+      {openForm && (
+        <ReviewForm 
+          onClose={() => setOpenForm(false)} 
+          userId={user?.data?._id} 
+          name={user?.data?.name}
+          profilePic={user?.data?.profilePic}
+          fetchReviews={fetchReviews}
+        />
+      )}
     </div>
   );
 };
