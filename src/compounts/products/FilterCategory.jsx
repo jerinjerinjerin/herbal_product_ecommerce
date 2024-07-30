@@ -180,7 +180,9 @@ const FilterProduct = () => {
   };
 
   return (
-    <div className="py-5">
+    <div className="pb-5">
+        <h1 className="flex justify-center items-center py-5 font-semibold text-xl text-white">Categories</h1>
+
       <motion.div
         initial={{ opacity: 0 }}
         animate={{

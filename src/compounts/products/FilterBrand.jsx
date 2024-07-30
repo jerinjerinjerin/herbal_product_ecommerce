@@ -181,6 +181,8 @@ const FilterBrand = () => {
 
   return (
     <div className="py-5">
+        <h1 className="flex justify-center items-center py-5 font-semibold text-xl text-white">Brands</h1>
+
       <motion.div
         initial={{ opacity: 0 }}
         animate={{
@@ -193,6 +195,7 @@ const FilterBrand = () => {
         }}
         className="min-h-[50vh] flex items-center pt-0"
       >
+
         <div className="container mx-auto">
           <div className="flex flex-col md:gap-[100px] mb-[10px]">
             <div>

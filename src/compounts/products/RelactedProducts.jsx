@@ -3,13 +3,14 @@ import Slider from "react-slick";
 import { motion, useAnimation } from "framer-motion";
 import { Button } from "../../components/ui/button";
 import { PiHandbagSimpleFill } from "react-icons/pi";
-import { MostBought, BestOffers, MensHelth, WomenHelth } from "../../data/data";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import StarRating from "../hero/StarRating";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { IoIosEye } from "react-icons/io";
+import axios from "axios";
+import backendDomin from "@/commen/api";
 
 const NextArrow = ({ onClick }) => (
   <div
@@ -29,13 +30,24 @@ const PrevArrow = ({ onClick }) => (
   </div>
 );
 
-const RelactedProduct = () => {
-  const allProducts = [
-    ...MostBought,
-    ...BestOffers,
-    ...MensHelth,
-    ...WomenHelth,
-  ];
+const RelatedProduct = () => {
+  const [relatedProducts, setRelatedProducts] = useState([]);
+
+  const {id} = useParams()
+
+  // Fetch related products
+  const fetchRelatedCategory = async () => {
+    try {
+      const response = await axios.get(`${backendDomin}/api/get-product-category/${id}`, {
+        withCredentials: true,
+      });
+      if (response.data.success && response.data.data) {
+        setRelatedProducts(response.data.data);
+      }
+    } catch (error) {
+      console.error('Error fetching related products:', error);
+    }
+  };
 
   const [sliderSettings, setSliderSettings] = useState({
     dots: true,
@@ -51,24 +63,14 @@ const RelactedProduct = () => {
   });
 
   useEffect(() => {
+    fetchRelatedCategory();
+
     const handleResize = () => {
       const windowWidth = window.innerWidth;
-      if (windowWidth <= 768) {
-        setSliderSettings((prevSettings) => ({
-          ...prevSettings,
-          slidesToShow: 1,
-        }));
-      } else if (windowWidth <= 1024) {
-        setSliderSettings((prevSettings) => ({
-          ...prevSettings,
-          slidesToShow: 2,
-        }));
-      } else {
-        setSliderSettings((prevSettings) => ({
-          ...prevSettings,
-          slidesToShow: 3,
-        }));
-      }
+      setSliderSettings(prevSettings => ({
+        ...prevSettings,
+        slidesToShow: windowWidth <= 768 ? 1 : windowWidth <= 1024 ? 2 : 3,
+      }));
     };
 
     handleResize();
@@ -94,35 +96,41 @@ const RelactedProduct = () => {
   const renderItems = (items) => {
     return items.map((item) => (
       <motion.div
-        key={item.id}
+        key={item._id} // Use item._id or any unique identifier from your data
         className="relative p-2"
         whileHover={{ scale: 1.05, transition: { duration: 0.3 } }}
       >
         <div className="bg-slate-800 bg-opacity-30 rounded-lg p-5 space-y-2 group overflow-hidden">
           <h1 className="text-center text-white font-semibold">
-            {item.name || item.price}
+            {item.productName}
           </h1>
           <div className="flex justify-center items-center">
-            <img
-              src={item.images[0].src}
-              className="w-[350px] rounded-md border-[3px] border-green-600 h-[400px] object-cover"
-              alt="filter-images"
-            />
+            {item.productImage && item.productImage.length > 0 ? (
+              <img
+                src={item.productImage[0]}
+                className="w-[350px] rounded-md border-[3px] border-green-600 h-[400px] object-cover"
+                alt={item.productName}
+              />
+            ) : (
+              <div className="w-[350px] h-[400px] bg-gray-300 rounded-md flex items-center justify-center">
+                <span className="text-gray-600">No Image Available</span>
+              </div>
+            )}
           </div>
           <div className="bg-opacity-30 rounded-lg p-5 space-y-2 group overflow-hidden">
-            <div className="flex xl:w-[100%] lg:w-[100%] md:w-[100%] w-[100%] rounded-md px-2 py-2 mx-auto justify-between items-center">
+            <div className="flex w-full rounded-md px-2 py-2 mx-auto justify-between items-center">
               <div>
-                {item.disCoundPrice ? (
+                {item.sellingPrice ? (
                   <span className="text-green-600 font-semibold">
-                    <span className="text-white">price</span>{" "}
-                    <del className="text-red-500"> {item.price}</del>{" "}
-                    <span className="text-[20px]">{item.disCoundPrice}</span>
+                    <span className="text-white">Price</span>{" "}
+                    <del className="text-red-500">{item.price}</del>{" "}
+                    <span className="text-[20px]">{item.sellingPrice}</span>
                   </span>
                 ) : (
                   item.price
                 )}
               </div>
-              <StarRating rating={item.rating} />
+              <StarRating rating={item.rating || 0} /> {/* Default to 0 if rating is not available */}
             </div>
           </div>
           <motion.div
@@ -132,26 +140,26 @@ const RelactedProduct = () => {
             transition={{ duration: 0.5, ease: "easeOut" }}
           >
             <motion.p
-              className="text-white text-center xl:text-xl md:text-sm text-md md:w-[250px] xl:w-[300px] w-[300px] py-5"
+              className="text-white text-center xl:text-xl md:text-sm text-md w-[300px] py-5"
               initial={{ y: 50, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ duration: 0.5, ease: "easeOut" }}
             >
-              {item.description || item.keyPoints}
+              {item.productDescription || "No description available"}
             </motion.p>
             <motion.div
               initial={{ y: 50, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ duration: 0.5, ease: "easeOut", delay: 0.3 }}
             >
-              <div className="flex flex-col gap5">
+              <div className="flex flex-col gap-5">
                 <Button className="bg-black border border-green-600 hover:border-white bg-opacity-70 flex justify-start items-center gap-1 pb-2">
                   Add to bag{" "}
                   <span>
                     <PiHandbagSimpleFill className="text-white" />
                   </span>
                 </Button>
-                <Link to={`/view-product/${item.id}`}>
+                <Link to={`/view-product/${item._id}`}>
                   <Button className="bg-black border border-green-600 hover:border-white bg-opacity-70 mt-3 flex justify-start items-center gap-1">
                     View Product{" "}
                     <span>
@@ -191,7 +199,7 @@ const RelactedProduct = () => {
 
             <div className="min-h-[70vh] md:-mt-[70px] w-full bg-black">
               <Slider {...sliderSettings} className="px-6">
-                {renderItems(allProducts)}
+                {renderItems(relatedProducts)}
               </Slider>
             </div>
           </div>
@@ -201,4 +209,4 @@ const RelactedProduct = () => {
   );
 };
 
-export default RelactedProduct;
+export default RelatedProduct;

@@ -5,31 +5,41 @@ import { useInView } from "react-intersection-observer";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
 
 const Cart = () => {
   const [cartItems, setCartItems] = useState([]);
+  const [productData, setProductData] = useState({});
+  const [loading, setLoading] = useState(true);
+  const productsFromRedux = useSelector((state) => state?.product?.product);
+
+  console.log('redux products', productsFromRedux);
 
   useEffect(() => {
-    window.scrollTo(0, 0); // Scroll to the top of the page on component mount
+    window.scrollTo(0, 0);
 
-    // Retrieve cart items from localStorage
     const storedCartItems = JSON.parse(localStorage.getItem("cart")) || [];
-    setCartItems(storedCartItems);
-
-    // Fetch maximum quantities for each item (simulated here as static)
-    // In a real application, you'd fetch this from the backend
-    const fetchMaxQuantities = async () => {
-      // Simulate fetching from the backend
-      const maxQuantities = {}; // e.g., { itemId1: 10, itemId2: 5 }
-      setCartItems(prevItems =>
-        prevItems.map(item => ({
-          ...item,
-          maxQuantity: maxQuantities[item._id] || 10 // Default to 10 if not specified
-        }))
-      );
-    };
-    fetchMaxQuantities();
+    const initializedCartItems = storedCartItems.map(item => ({
+      ...item,
+      quantity: item.quantity || 1
+    }));
+    
+    setCartItems(initializedCartItems);
   }, []);
+
+  useEffect(() => {
+    const fetchProductData = async () => {
+      // Simulate fetching product data
+      const productData = productsFromRedux; // Replace with actual API call if needed
+      setProductData(productData.reduce((acc, item) => {
+        acc[item._id] = item;
+        return acc;
+      }, {}));
+      setLoading(false); // Set loading to false once data is loaded
+    };
+
+    fetchProductData();
+  }, [productsFromRedux]);
 
   const { ref: containerRef, inView: containerInView } = useInView({
     triggerOnce: false,
@@ -48,30 +58,24 @@ const Cart = () => {
     }
   }, [containerInView]);
 
-
   const handleQuantityChange = (index, delta) => {
     const updatedItems = [...cartItems];
-    const currentQuantity = updatedItems[index].quantity;
-    const maxQuantity = updatedItems[index].maxQuantity; // Assume each item has a maxQuantity property
-    const newQuantity = currentQuantity + delta;
-  
+    const item = updatedItems[index];
+    const newQuantity = item.quantity + delta;
+    const product = productData[item._id];
+
     if (newQuantity < 1) {
       toast.error('Quantity cannot be less than 1');
       return;
-    }
-    
-    if (newQuantity > maxQuantity) {
-      toast.error(`Cannot exceed the maximum quantity of ${maxQuantity}`);
+    } else if (newQuantity > (product ? product.stock : Infinity)) {
+      toast.error(`Quantity cannot exceed stock (${product ? product.stock : 'unlimited'})`);
       return;
     }
-    
+
     updatedItems[index].quantity = newQuantity;
     setCartItems(updatedItems);
     localStorage.setItem("cart", JSON.stringify(updatedItems));
   };
-  
-
-
 
   const handleRemoveItem = (index) => {
     const updatedItems = cartItems.filter((_, i) => i !== index);
@@ -83,6 +87,10 @@ const Cart = () => {
   const totalPrice = cartItems.reduce((total, item) => total + item.sellingPrice * item.quantity, 0);
   const discountPrice = cartItems.reduce((total, item) => total + (item.price - item.sellingPrice) * item.quantity, 0);
   const tax = (totalPrice * 0.08).toFixed(2);
+
+  if (loading) {
+    return <div>Loading...</div>; // Show a loading indicator or placeholder
+  }
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -96,7 +104,7 @@ const Cart = () => {
             {cartItems.map((item, index) => (
               <motion.div
                 key={item._id}
-                className="flex items-center gap-2 w-full pb-1 py-2 animate-in-view"
+                className={`flex items-center gap-2 w-full pb-1 py-2 animate-in-view ${item.quantity > (productData[item._id]?.stock || Infinity) ? 'bg-red-100' : ''}`}
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
