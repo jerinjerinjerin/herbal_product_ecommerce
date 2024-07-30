@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { CgClose } from "react-icons/cg";
 import { useDropzone } from "react-dropzone";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { Button } from "@/components/ui/button";
+import { motion, useAnimation } from "framer-motion";
 import EditProductInput from "./EditProductInput";
 import EditProductImageUpload from "./EditProductImageUpload";
 import DisplayImage from "./DisplayImage";
@@ -12,8 +13,7 @@ import ageByShop from "@/helpers/productAgeByShop";
 import productCategory from "@/helpers/productCategory";
 import uploadImage from "@/helpers/UploadImage";
 
-const EditProduct = ({ onClose,getAllProducts,product }) => {
-
+const EditProduct = ({ onClose, getAllProducts, product }) => {
   const [data, setData] = useState({
     _id: product._id,
     productName: product.productName || "",
@@ -31,6 +31,14 @@ const EditProduct = ({ onClose,getAllProducts,product }) => {
 
   const [openFullScreenImage, setOpenFullScreenImage] = useState(false);
   const [fullScreenImage, setFullScreenImage] = useState("");
+  const controls = useAnimation();
+  useEffect(() => {
+    controls.start({
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.5, ease: "easeOut" },
+    });
+  }, [controls]);
 
   const handleOnChange = (e) => {
     const { name, value } = e.target;
@@ -98,8 +106,11 @@ const EditProduct = ({ onClose,getAllProducts,product }) => {
   };
 
   return (
-    <div className="fixed inset-0 flex justify-center items-center bg-slate-800 bg-opacity-75 z-[4000]">
-      <div className="bg-black text-white p-4 rounded w-full max-w-2xl max-h-[80%] overflow-auto">
+    <motion.div 
+    initial={{ opacity: 0, y: -50 }}
+    animate={controls}
+    className="fixed inset-0 flex justify-center items-center bg-slate-800 bg-opacity-75 z-[4000]">
+      <div className="bg-black text-white p-4 rounded w-full max-w-2xl max-h-[80%] hide-scrollbar overflow-auto">
         <div className="flex justify-between items-center mb-4">
           <h1 className="font-bold text-lg">Edit Product</h1>
           <div className="ml-auto">
@@ -127,7 +138,6 @@ const EditProduct = ({ onClose,getAllProducts,product }) => {
             handleDeleteProductImage={handleDeleteProductImage}
           />
 
-
           <Button
             type="submit"
             className="mt-4 w-[100%] bg-transparent border border-green-600 text-white py-2 px-4 rounded hover:bg-green-600"
@@ -143,7 +153,7 @@ const EditProduct = ({ onClose,getAllProducts,product }) => {
           onClose={() => setOpenFullScreenImage(false)}
         />
       )}
-    </div>
+    </motion.div>
   );
 };
 

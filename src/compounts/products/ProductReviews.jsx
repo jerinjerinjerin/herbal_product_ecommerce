@@ -59,7 +59,7 @@ const ProductReviews = () => {
           onClick={handleOpen}
           className="bg-transparent border border-green-600 text-white rounded-md hover:bg-green-600"
         >
-          {user ? "Add Review" : "Login to add review"}
+        Add Review
         </Button>
       </div>
 

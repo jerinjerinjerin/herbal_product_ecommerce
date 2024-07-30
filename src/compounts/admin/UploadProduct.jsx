@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { CgClose } from "react-icons/cg";
 import { useDropzone } from "react-dropzone";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { motion, useAnimation } from 'framer-motion';
 import { Button } from "@/components/ui/button";
 import ProductInput from "./ProductInput";
 import ProductImageUpload from "./ProductImageUpload";
@@ -30,6 +31,11 @@ const UploadProduct = ({ onClose }) => {
   const [openFullScreenImage, setOpenFullScreenImage] = useState(false);
   const [fullScreenImage, setFullScreenImage] = useState("");
   const [errors, setErrors] = useState({});
+  const controls = useAnimation();
+
+  useEffect(() => {
+    controls.start({ opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } });
+  }, [controls]);
 
   const handleOnChange = (e) => {
     const { name, value } = e.target;
@@ -174,8 +180,11 @@ const UploadProduct = ({ onClose }) => {
   };
 
   return (
-    <div className="fixed inset-0 flex justify-center items-center bg-slate-800 z-[2000] bg-opacity-75">
-      <div className="bg-black text-white p-4 rounded w-full max-w-2xl max-h-[80%] overflow-auto">
+    <motion.div 
+    initial={{ opacity: 0, y: -50 }}
+    animate={controls}
+    className="fixed inset-0 flex justify-center items-center bg-slate-800 z-[2000] bg-opacity-75">
+      <div className="bg-black text-white p-4 rounded w-full max-w-2xl max-h-[80%] my-auto hide-scrollbar overflow-y-scroll">
         <div className="flex justify-between items-center mb-4">
           <h1 className="font-bold text-lg">Upload Product</h1>
           <div className="ml-auto">
@@ -225,7 +234,7 @@ const UploadProduct = ({ onClose }) => {
           onClose={() => setOpenFullScreenImage(false)}
         />
       )}
-    </div>
+    </motion.div>
   );
 };
 

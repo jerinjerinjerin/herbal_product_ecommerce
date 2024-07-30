@@ -13,11 +13,22 @@ import { useDispatch, useSelector } from "react-redux";
 import backendDomin from "@/commen/api";
 import { toast } from "react-toastify";
 import { FaUser } from "react-icons/fa";
-import { CiLogout } from "react-icons/ci";
 import axios from "axios";
+import { IoMdLogOut } from "react-icons/io";
 import { setUserDetials } from "@/redux/userSlice";
 import { Button } from "@/components/ui/button";
-import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/clerk-react";
+
+import {
+  AlertDialog,
+  AlertDialogTrigger,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogCancel,
+  AlertDialogAction,
+} from "@/components/ui/alert-dialog";
 
 const Navbar = () => {
   const user = useSelector((state) => state.user.user);
@@ -31,7 +42,7 @@ const Navbar = () => {
   const handleLogout = async () => {
     try {
       const response = await axios.get(`${backendDomin}/api/logout`, {
-        withCredentials: "include",
+        withCredentials: true,
       });
       if (response.data.success) {
         toast.success(response.data.message || "Logout success");
@@ -45,17 +56,15 @@ const Navbar = () => {
     }
   };
 
-  useEffect(() => {
-    // Re-render when the user state changes
-  }, [user]);
-
   return (
     <nav className="justify-between items-center flex lg:px-5 z-[10] md:px-2 h-[100px]">
       <div className="px-10 md:px-0">
-        <Link to={'/'}>
-        <img 
-          className="w-16 h-16 object-cover rounded-full"
-          src="https://dynamic.brandcrowd.com/asset/logo/a2c58d20-7c6f-4e8f-ab27-206467df00e8/logo-search-grid-1x?logoTemplateVersion=1&v=637786131320670000" alt="logoimage" />
+        <Link to={"/"}>
+          <img
+            className="w-16 h-16 object-cover rounded-full"
+            src="https://dynamic.brandcrowd.com/asset/logo/a2c58d20-7c6f-4e8f-ab27-206467df00e8/logo-search-grid-1x?logoTemplateVersion=1&v=637786131320670000"
+            alt="logoimage"
+          />
         </Link>
       </div>
       <div className="space-x-5 hidden lg:flex">
@@ -85,14 +94,6 @@ const Navbar = () => {
       {/* admin panel */}
       <div className="hidden lg:space-x-4 space-x-2 lg:flex">
         <div className="relative flex justify-center">
-
-        {/* <SignedOut > */}
-        {/* <SignInButton className="text-white" mode="modal" /> */}
-      {/* </SignedOut> */}
-      {/* <SignedIn className="text-white"> */}
-        {/* <UserButton /> */}
-      {/* </SignedIn> */}
-
           {user?.data?._id && (
             <div className="text-2xl cursor-pointer" onClick={handleChangeMenu}>
               {user && (
@@ -138,19 +139,38 @@ const Navbar = () => {
             </div>
           </div>
         ))}
-        {/* handle logout */}
         <div className="">
           {user?.data?._id ? (
             <div className="flex gap-1 items-center">
-              <Button
-                onClick={handleLogout}
-                className="text-white group bg-transparent hover:bg-slate-900 hover:text-green-600 cursor-pointer"
-              >
-                Logout{" "}
-                <span className="ml-1">
-                  <CiLogout className="text-white group-hover:text-green-600" />
-                </span>
-              </Button>
+              <AlertDialog className="">
+                <AlertDialogTrigger>
+                  <Button className="bg-transparent hover:text-green-600 text-white cursor-pointer">
+                    <span className="mr-1 font-semibold">
+                      <IoMdLogOut className="size-4" />
+                    </span>
+                    Logout
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent className="bg-black border border-green-600 text-white">
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                    <AlertDialogDescription className="text-white">
+                      This action will log you out. You will need to log in again to access your account.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel className="bg-transparent border border-green-600 text-white hover:text-white hover:bg-blue-800">
+                      Cancel
+                    </AlertDialogCancel>
+                    <AlertDialogAction
+                      onClick={handleLogout}
+                      className="bg-transparent border border-green-600 text-white hover:bg-red-800"
+                    >
+                      Logout
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
             </div>
           ) : (
             <Link to="/login" className="">

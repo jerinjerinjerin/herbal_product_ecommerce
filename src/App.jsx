@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useDispatch } from "react-redux";
+import { useDispatch} from "react-redux";
 import backendDomin from "./commen/api";
 import { setUserDetials } from "./redux/userSlice";
 import { useEffect } from "react";
@@ -30,36 +30,32 @@ import Filter from "./compounts/products/FilterBrand";
 function App() {
   const dispatch = useDispatch();
 
-  const fetchUserDetials = async () => {
+
+  const fetchUserDetails = async () => {
+
     try {
       const response = await axios.get(`${backendDomin}/api/user-detials`, {
-        withCredentials: true, // Ensure this is set to true
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`, // Add token if used
-        },
+        withCredentials: "include"
       });
-  
-      if (response.data.data) {
+      if (response.data.success) {
+        console.log('data', response.data);
         dispatch(setUserDetials(response.data));
-        console.log('response data', response.data.data);
       }
     } catch (error) {
-      console.log(error.message);
+      console.log('error', error);
     }
   };
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      fetchUserDetials();
-    }
+    /**user Details */
+    fetchUserDetails();
   }, []);
-  
+
   return (
     <>
       <div className="">
         <BrowserRouter>
-          <Context.Provider value={{ fetchUserDetials }}>
+          <Context.Provider value={{ fetchUserDetails }}>
             <ToastContainer position="top-center" />
             <div className="w-full z-[1000] sticky bg-slate-900 top-0 overflow-x-hidden shadow-md shadow-green-200">
               <Navbar />
@@ -82,7 +78,7 @@ function App() {
                 <Route path="/filter-product" element={<FilterProduct />} />
                 <Route path="/view-product/:id" element={<ViewProduct />} />
                 <Route path="/checkout" element={<Checkout />} />
-                <Route path="/checkout" element={<Checkout />} />
+                <Route path="/cart" element={<Cart />} />
                 <Route path="/go-to-shop" element={<Filter />} />
                 <Route path="/all-products-shop" element={<ViewAllProduct />} />
               </Routes>

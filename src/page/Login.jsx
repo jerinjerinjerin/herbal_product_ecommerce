@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const navigater = useNavigate();
-  const { fetchUserDetials } = useContext(Context);
+  const { fetchUserDetails } = useContext(Context);
   const [data, setData] = useState({
     email: "",
     password: "",
@@ -48,10 +48,10 @@ const Login = () => {
 
       if (response.data.success) {
         toast.success(response.data.message);
+        navigater("/");
+        fetchUserDetails();
       }
 
-      navigater("/");
-      fetchUserDetials();
     } catch (error) {
       toast.error(error.response.data.message);
     }
