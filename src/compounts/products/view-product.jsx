@@ -1,4 +1,10 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  useCallback,
+  useContext,
+} from "react";
 import axios from "axios";
 import moment from "moment";
 import { useNavigate, useParams } from "react-router-dom";
@@ -13,12 +19,22 @@ import ProductReviews from "./ProductReviews";
 import { Button } from "@/components/ui/button";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
+import addToCart from "@/helpers/addToCart";
+import Context from "@/context/context";
 
 const ViewProduct = () => {
+  const {fetchUserAddToCart} = useContext(Context);
+
+
+    const handleAddToCart = async (e, id) => {
+
+      await addToCart(e, id);
+
+      fetchUserAddToCart();
+    };
+
   const user = useSelector((state) => state.user.user);
-  const navigate = useNavigate();
   const { id } = useParams();
-  const [cart, setCart] = useState([]);
   const [product, setProduct] = useState(null);
   const [error, setError] = useState(null);
   const [mainImage, setMainImage] = useState("");
@@ -95,28 +111,6 @@ const ViewProduct = () => {
     setZoomImage(false);
   };
 
-  // Add to cart handler
-  const addToCart = (product) => {
-    if (!user) {
-      // If the user is not logged in, redirect to the login page
-      toast.error("Please log in to continue shopping");
-      navigate("/login");
-      return; // Exit the function to prevent further execution
-    }
-    if (product) {
-      // Check if the product is already in the cart
-      if (cart.some((p) => p._id === product._id)) {
-        toast.error("product already added to cart");
-        return;
-      }
-    }
-    setCart((prevCart) => [...prevCart, product]);
-    // Optionally, you can store the cart in localStorage to persist
-    localStorage.setItem("cart", JSON.stringify([...cart, product]));
-
-    toast.success("product added cart ");
-  };
-
   return (
     <div className="flex flex-col lg:gap-[80px] md:gap-[0px] gap-[20px] pb-10">
       <motion.div
@@ -139,14 +133,8 @@ const ViewProduct = () => {
 
         {product ? (
           <div className="grid md:grid-cols-2 lg:mt-0 md:mt-[30px] grid-cols-1 md:gap-4">
-            <div
-              className="relative object-scale-down"
-              
-              
-            >
-              <div className="flex flex-col lg:flex-row gap-10 lg:relative"
-              
-              >
+            <div className="relative object-scale-down">
+              <div className="flex flex-col lg:flex-row gap-10 lg:relative">
                 <img
                   onMouseMove={handleZoomImage}
                   onMouseLeave={handleLeaveImageZoom}
@@ -314,10 +302,7 @@ const ViewProduct = () => {
                     initial={{ scale: 0.8, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
                     transition={{ duration: 0.5 }}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      addToCart(product);
-                    }}
+                    onClick={(e) =>handleAddToCart(e, product?._id)}
                   >
                     Add to Cart
                   </motion.button>

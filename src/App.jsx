@@ -1,10 +1,10 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useDispatch} from "react-redux";
+import { useDispatch } from "react-redux";
 import backendDomin from "./commen/api";
 import { setUserDetials } from "./redux/userSlice";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import Context from "./context/context";
 import Navbar from "./compounts/navbar/Navbar";
@@ -29,33 +29,59 @@ import Filter from "./compounts/products/FilterBrand";
 
 function App() {
   const dispatch = useDispatch();
-
+  const [cartProductCount, setCartProductCount] = useState(0);
 
   const fetchUserDetails = async () => {
-
     try {
       const response = await axios.get(`${backendDomin}/api/user-detials`, {
-        withCredentials: "include"
+        withCredentials: "include",
       });
       if (response.data.success) {
-        console.log('data', response.data);
+        // console.log("data", response.data);
         dispatch(setUserDetials(response.data));
       }
     } catch (error) {
-      console.log('error', error);
+      console.log("error", error);
     }
+  };
+
+  const fetchUserAddToCart = async () => {
+    try {
+      const response = await axios.get(
+        `${backendDomin}/api/count-product-cart`,
+        {
+          withCredentials: "include",
+        }
+      );
+
+      // console.log("api response", response.data?.data?.count);
+
+      setCartProductCount(response.data?.data?.count);
+
+      if (response.data.success) {
+        dispatch(setUserDetials(response.data));
+      }
+    } catch (error) {}
   };
 
   useEffect(() => {
     /**user Details */
     fetchUserDetails();
-  }, []);
+    fetchUserAddToCart();
+     // to fetch user cart items count and update the user details in the state
+  }, [cartProductCount]);
 
   return (
     <>
       <div className="">
         <BrowserRouter>
-          <Context.Provider value={{ fetchUserDetails }}>
+          <Context.Provider
+            value={{
+              fetchUserDetails,
+              cartProductCount, //current user add to cart
+              fetchUserAddToCart,
+            }}
+          >
             <ToastContainer position="top-center" />
             <div className="w-full z-[1000] sticky bg-slate-900 top-0 overflow-x-hidden shadow-md shadow-green-200">
               <Navbar />

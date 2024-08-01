@@ -11,6 +11,7 @@ import { Link, useParams } from "react-router-dom";
 import { IoIosEye } from "react-icons/io";
 import axios from "axios";
 import backendDomin from "@/commen/api";
+import formatCurrency from "@/helpers/formatCurrency";
 
 const NextArrow = ({ onClick }) => (
   <div
@@ -100,77 +101,74 @@ const RelatedProduct = () => {
         className="relative p-2"
         whileHover={{ scale: 1.05, transition: { duration: 0.3 } }}
       >
-        <div className="bg-slate-800 bg-opacity-30 rounded-lg p-5 space-y-2 group overflow-hidden">
-          <h1 className="text-center text-white font-semibold">
-            {item.productName}
-          </h1>
-          <div className="flex justify-center items-center">
-            {item.productImage && item.productImage.length > 0 ? (
-              <img
-                src={item.productImage[0]}
-                className="w-[350px] rounded-md border-[3px] border-green-600 h-[400px] object-cover"
-                alt={item.productName}
-              />
-            ) : (
-              <div className="w-[350px] h-[400px] bg-gray-300 rounded-md flex items-center justify-center">
-                <span className="text-gray-600">No Image Available</span>
-              </div>
-            )}
-          </div>
-          <div className="bg-opacity-30 rounded-lg p-5 space-y-2 group overflow-hidden">
-            <div className="flex w-full rounded-md px-2 py-2 mx-auto justify-between items-center">
-              <div>
-                {item.sellingPrice ? (
-                  <span className="text-green-600 font-semibold">
-                    <span className="text-white">Price</span>{" "}
-                    <del className="text-red-500">{item.price}</del>{" "}
-                    <span className="text-[20px]">{item.sellingPrice}</span>
-                  </span>
-                ) : (
-                  item.price
-                )}
-              </div>
-              <StarRating rating={item.rating || 0} /> {/* Default to 0 if rating is not available */}
-            </div>
-          </div>
-          <motion.div
-            className="absolute top-0 left-0 w-full h-full flex flex-col justify-center items-center bg-black bg-opacity-75 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-            initial={{ y: 50, opacity: 0 }}
-            whileHover={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.5, ease: "easeOut" }}
-          >
-            <motion.p
-              className="text-white text-center xl:text-xl md:text-sm text-md w-[300px] py-5"
-              initial={{ y: 50, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ duration: 0.5, ease: "easeOut" }}
-            >
-              {item.productDescription || "No description available"}
-            </motion.p>
-            <motion.div
-              initial={{ y: 50, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ duration: 0.5, ease: "easeOut", delay: 0.3 }}
-            >
-              <div className="flex flex-col gap-5">
-                <Button className="bg-black border border-green-600 hover:border-white bg-opacity-70 flex justify-start items-center gap-1 pb-2">
-                  Add to bag{" "}
-                  <span>
-                    <PiHandbagSimpleFill className="text-white" />
-                  </span>
-                </Button>
-                <Link to={`/view-product/${item._id}`}>
-                  <Button className="bg-black border border-green-600 hover:border-white bg-opacity-70 mt-3 flex justify-start items-center gap-1">
-                    View Product{" "}
-                    <span>
-                      <IoIosEye className="text-white" />
-                    </span>
-                  </Button>
-                </Link>
-              </div>
-            </motion.div>
-          </motion.div>
-        </div>
+
+<div className="bg-slate-800 bg-opacity-30 rounded-lg p-3 space-y-0 group overflow-hidden">
+   <h1 className="text-center text-white font-semibold">
+     {item.productName.length > 30 ? (
+       item.productName.slice(0, 30) + "..."
+     ): item.productName}
+   </h1>
+   <div className="flex justify-center items-center">
+     <img
+       src={item.productImage[0]}
+       className="w-full max-w-[300px] rounded-md border-[3px] border-green-600 h-[300px] object-cover"
+       alt="filter-images"
+     />
+   </div>
+   <div className="bg-opacity-30 rounded-lg p-5 space-y-2 group overflow-hidden">
+     <div className="flex w-full rounded-md px-2 py-2 mx-auto justify-between items-center"></div>
+   </div>
+   <motion.div
+     className="absolute top-0 left-0 w-full h-full flex flex-col justify-center items-center bg-black bg-opacity-75 
+     opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+     initial={{ y: 50, opacity: 0 }}
+     whileHover={{ y: 0, opacity: 1 }}
+     transition={{ duration: 0.5, ease: "easeOut" }}
+   >
+     <motion.p
+       className="text-white text-center text-sm px-[100px] py-5"
+       initial={{ y: 50, opacity: 0 }}
+       animate={{ y: 0, opacity: 1 }}
+       transition={{ duration: 0.5, ease: "easeOut" }}
+     >
+       {item.productDescription.slice(0, 80)}...
+     </motion.p>
+     <motion.div
+       initial={{ y: 50, opacity: 0 }}
+       animate={{ y: 0, opacity: 1 }}
+       transition={{ duration: 0.5, ease: "easeOut", delay: 0.3 }}
+     >
+       <div className="flex flex-col gap-2 items-center mb-[60px]">
+         <Button className=" border w-full border-green-600 bg-transparent hover:bg-green-600 flex  items-center gap-1 ">
+           Add to bag{" "}
+         </Button>
+         <Link to={`/view-product/${item._id}`} className="w-full">
+           <Button className=" border w-full border-green-600 bg-transparent hover:bg-green-600 flex  items-center gap-1">
+             View Product{" "}
+           </Button>
+         </Link>
+         
+         <Button className=" border w-full border-green-600 bg-transparent hover:bg-green-600 flex  items-center gap-1 ">
+           Add to wishlist{" "}
+         </Button>
+       </div>
+     </motion.div>
+   </motion.div>
+   <div className="flex justify-between items-center text-white mb-2">
+     <p className="text-[15px]"><del className="text-red-500">price: {formatCurrency(item.price)}</del></p>
+     <p className="text-[15px]">DiscountPrice: {" "}
+       <span className="text-green-600 text-[20px]">{formatCurrency(item.sellingPrice)}</span></p>
+     <p className="text-[15px]">Weight: {item.weight}</p>
+   </div>
+ </div>
+
+
+
+
+
+
+
+
       </motion.div>
     ));
   };

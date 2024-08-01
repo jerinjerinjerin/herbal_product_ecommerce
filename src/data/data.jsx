@@ -1,6 +1,5 @@
 import { IoMdArrowDropdown } from "react-icons/io";
 import { FaCar, FaHeart } from "react-icons/fa";
-import { IoBag } from "react-icons/io5";
 import profileImage from '../assets/uploadProfile.png';
 
 import {
@@ -72,12 +71,7 @@ export const NavItem_Right = [
     name: "WishList",
     icon: <FaHeart />,
   },
-  {
-    name: "My Bag",
-    icon: <IoBag />,
-    path: "/cart",
 
-  },
 ];
 
 export const ShopAgeData = [

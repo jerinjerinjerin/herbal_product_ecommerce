@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { NavItem_Left, NavItem_Right } from "../../data/data";
 import { BsSearch } from "react-icons/bs";
 import {
@@ -17,6 +17,7 @@ import axios from "axios";
 import { IoMdLogOut } from "react-icons/io";
 import { setUserDetials } from "@/redux/userSlice";
 import { Button } from "@/components/ui/button";
+import { IoBag } from "react-icons/io5";
 
 import {
   AlertDialog,
@@ -29,11 +30,13 @@ import {
   AlertDialogCancel,
   AlertDialogAction,
 } from "@/components/ui/alert-dialog";
+import Context from "@/context/context";
 
 const Navbar = () => {
   const user = useSelector((state) => state.user.user);
   const dispatch = useDispatch();
   const [menuDisplay, setMenuDisplay] = useState(false);
+  const context = useContext(Context);
 
   const handleChangeMenu = () => {
     setMenuDisplay(!menuDisplay);
@@ -139,6 +142,24 @@ const Navbar = () => {
             </div>
           </div>
         ))}
+
+        <div className="text-white flex items-center gap-1 group">
+          <span>
+            <IoBag />
+          </span>{" "}
+          <Link
+            to={"/cart"}
+            className="hover:text-green-600 flex gap-1 items-center"
+          >
+            <h1 className="">My bag </h1>
+          </Link>
+          {user?.data?._id && (
+            <span className="text-white-300 group-hover:text-green-600">
+              {context.cartProductCount}
+            </span>
+          )}
+        </div>
+
         <div className="">
           {user?.data?._id ? (
             <div className="flex gap-1 items-center">
@@ -153,9 +174,12 @@ const Navbar = () => {
                 </AlertDialogTrigger>
                 <AlertDialogContent className="bg-black border border-green-600 text-white">
                   <AlertDialogHeader>
-                    <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                    <AlertDialogTitle>
+                      Are you absolutely sure?
+                    </AlertDialogTitle>
                     <AlertDialogDescription className="text-white">
-                      This action will log you out. You will need to log in again to access your account.
+                      This action will log you out. You will need to log in
+                      again to access your account.
                     </AlertDialogDescription>
                   </AlertDialogHeader>
                   <AlertDialogFooter>

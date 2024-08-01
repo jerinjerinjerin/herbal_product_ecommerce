@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Slider from "react-slick";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "../../components/ui/button";
@@ -7,6 +7,8 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import backendDomin from "@/commen/api";
 import formatCurrency from "@/helpers/formatCurrency";
+import addToCart from "@/helpers/addToCart";
+import Context from "@/context/context";
 
 // Arrow components for the slider
 const NextArrow = ({ onClick }) => (
@@ -28,6 +30,12 @@ const PrevArrow = ({ onClick }) => (
 );
 
 const FilterProduct = () => {
+  const { fetchUserAddToCart } = useContext(Context);
+  const handleAddToCart = async (e, id) => {
+    await addToCart(e, id);
+    fetchUserAddToCart();
+  };
+
   const [allProducts, setAllProducts] = useState([]);
   const [currentTab, setCurrentTab] = useState("");
   const [sliderSettings, setSliderSettings] = useState({
@@ -117,9 +125,9 @@ const FilterProduct = () => {
       >
         <div className="bg-slate-800 bg-opacity-30 rounded-lg p-3 space-y-0 group overflow-hidden">
           <h1 className="text-center text-white font-semibold">
-            {item.productName.length > 30 ? (
-              item.productName.slice(0, 30) + "..."
-            ): item.productName}
+            {item.productName.length > 30
+              ? item.productName.slice(0, 30) + "..."
+              : item.productName}
           </h1>
           <div className="flex justify-center items-center">
             <img
@@ -132,7 +140,8 @@ const FilterProduct = () => {
             <div className="flex w-full rounded-md px-2 py-2 mx-auto justify-between items-center"></div>
           </div>
           <motion.div
-            className="absolute top-0 left-0 w-full h-full flex flex-col justify-center items-center bg-black bg-opacity-75 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+            className="absolute top-0 left-0 w-full h-full flex flex-col justify-center items-center bg-black bg-opacity-75 
+            opacity-0 group-hover:opacity-100 transition-opacity duration-300"
             initial={{ y: 50, opacity: 0 }}
             whileHover={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.5, ease: "easeOut" }}
@@ -146,14 +155,15 @@ const FilterProduct = () => {
               {item.productDescription.slice(0, 80)}...
             </motion.p>
 
-
             <motion.div
               initial={{ y: 50, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ duration: 0.5, ease: "easeOut", delay: 0.3 }}
             >
               <div className="flex flex-col gap-2 items-center mb-[60px]">
-                <Button className=" border w-full border-green-600 bg-transparent hover:bg-green-600 flex  items-center gap-1 ">
+                <Button className=" border w-full border-green-600 bg-transparent hover:bg-green-600 flex  items-center gap-1 "
+                  onClick={(e) =>handleAddToCart(e, item?._id)}
+                >
                   Add to bag{" "}
                 </Button>
                 <Link to={`/view-product/${item._id}`} className="w-full">
@@ -161,17 +171,25 @@ const FilterProduct = () => {
                     View Product{" "}
                   </Button>
                 </Link>
-                
+
                 <Button className=" border w-full border-green-600 bg-transparent hover:bg-green-600 flex  items-center gap-1 ">
                   Add to wishlist{" "}
                 </Button>
               </div>
             </motion.div>
-
           </motion.div>
           <div className="flex justify-between items-center text-white mb-2">
-            <p className="text-[15px]"><del className="text-red-500">price: {formatCurrency(item.price)}</del></p>
-            <p className="text-[15px]">DiscountPrice: {" "}<span className="text-green-600 text-[20px]">{formatCurrency(item.sellingPrice)}</span></p>
+            <p className="text-[15px]">
+              <del className="text-red-500">
+                price: {formatCurrency(item.price)}
+              </del>
+            </p>
+            <p className="text-[15px]">
+              DiscountPrice:{" "}
+              <span className="text-green-600 text-[20px]">
+                {formatCurrency(item.sellingPrice)}
+              </span>
+            </p>
             <p className="text-[15px]">Weight: {item.weight}</p>
           </div>
         </div>
@@ -181,7 +199,9 @@ const FilterProduct = () => {
 
   return (
     <div className="pb-5">
-        <h1 className="flex justify-center items-center py-5 font-semibold text-xl text-white">Categories</h1>
+      <h1 className="flex justify-center items-center py-5 font-semibold text-xl text-white">
+        Categories
+      </h1>
 
       <motion.div
         initial={{ opacity: 0 }}
@@ -198,8 +218,10 @@ const FilterProduct = () => {
         <div className="container mx-auto">
           <div className="flex flex-col md:gap-[100px] mb-[10px]">
             <div>
-              <div className="flex bg-black gap-3 pb-2 md:pb-0
-                w-full overflow-x-scroll  mx-auto  hide-scrollbar">
+              <div
+                className="flex bg-black gap-3 pb-2 md:pb-0
+                w-full overflow-x-scroll  mx-auto  hide-scrollbar"
+              >
                 {getCategories().map((tab) => (
                   <motion.div
                     whileTap={{ scale: 0.9 }}

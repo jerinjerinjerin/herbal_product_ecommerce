@@ -6,6 +6,7 @@ import axios from "axios";
 import ReviewForm from "./ReviewForm";
 import Review from "./Review";
 import backendDomin from "@/commen/api";
+import { toast } from "react-toastify";
 
 const ProductReviews = () => {
   const [showAllReviews, setShowAllReviews] = useState(false);
@@ -41,6 +42,7 @@ const ProductReviews = () => {
     if (user) {
       setOpenForm(true);
     } else {
+      toast.error('login to continue add review');
       navigate("/login");
     }
   };

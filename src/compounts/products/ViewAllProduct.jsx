@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { Button } from "@/components/ui/button";
 import formatCurrency from "@/helpers/formatCurrency";
@@ -7,9 +7,18 @@ import backendDomin from "@/commen/api";
 import { Link, useNavigate } from "react-router-dom";
 import { toast} from "react-toastify";
 import { useSelector } from "react-redux";
+import Context from "@/context/context";
+import addToCart from "@/helpers/addToCart";
 
 const ViewAllProduct = () => {
   const user = useSelector((state) => state.user.user);
+
+  const {fetchUserAddToCart} = useContext(Context);
+  const handleAddToCart = async (e, id) => {
+    await addToCart(e, id);
+    fetchUserAddToCart();
+  };
+
   const navigate = useNavigate();
   const [products, setProducts] = useState([]);
   const [inView, setInView] = useState([]);
@@ -57,27 +66,7 @@ const ViewAllProduct = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [products]);
 
-  // Add to cart handler
-  const addToCart = (product) => {
-    if (!user) {
-      // If the user is not logged in, redirect to the login page
-      toast.error('Please log in to continue shopping');
-      navigate("/login");
-      return; // Exit the function to prevent further execution
-    }
-    if (product) {
-      // Check if the product is already in the cart
-      if (cart.some((p) => p._id === product._id)) {
-        toast.error('Product already added to cart');
-        return;
-      }
-    }
-    setCart((prevCart) => [...prevCart, product]);
-    // Optionally, you can store the cart in localStorage to persist it
-    localStorage.setItem("cart", JSON.stringify([...cart, product]));
 
-    toast.success('Product added to cart');
-  };
 
   return (
     <section className="container py-10">
@@ -178,10 +167,7 @@ const ViewAllProduct = () => {
                 >
                   <Button
                     className="border border-green-600 bg-transparent hover:bg-green-600 text-white transition-colors duration-300"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      addToCart(item);
-                    }}
+                    onClick={(e) =>handleAddToCart(e, item?._id)}
                   >
                     Add to bag
                   </Button>
