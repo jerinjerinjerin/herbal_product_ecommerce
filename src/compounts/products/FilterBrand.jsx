@@ -120,7 +120,7 @@ const FilterBrand = () => {
     return items.map((item) => (
       <motion.div
         key={item._id}
-        className="relative p-2"
+        className="relative lg:p-2"
         whileHover={{ scale: 1.05, transition: { duration: 0.3 } }}
       >
         <div className="bg-slate-800 bg-opacity-30 rounded-lg p-3 space-y-0 group overflow-hidden">
