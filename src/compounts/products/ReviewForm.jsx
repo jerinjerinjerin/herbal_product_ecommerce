@@ -86,7 +86,7 @@ const ReviewForm = ({ onClose, userId,name, profilePic, fetchReviews }) => {
 
   return (
     <motion.div
-      className='fixed inset-0 bg-slate-900 bg-opacity-75 z-[100] flex items-center justify-center'
+      className='fixed inset-0 bg-slate-900 bg-opacity-75 z-[4] flex items-center justify-center'
       initial={{ opacity: 0, y: -50 }}
       animate={controls}
     >

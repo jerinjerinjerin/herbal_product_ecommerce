@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useContext } from "react";
 import { FaHeart, FaTrash } from "react-icons/fa";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
@@ -8,12 +8,13 @@ import { toast } from "react-toastify";
 import axios from "axios";
 import formatCurrency from "@/helpers/formatCurrency";
 import backendDomin from "@/commen/api";
-import { useSelector } from "react-redux";
+import Context from "@/context/context";
+import LoaderPage from "@/helpers/LoaderPage";
 
 const Cart = () => {
+  const { fetchUserAddToCart } = useContext(Context);
   const [cartItems, setCartItems] = useState([]);
   const [loading, setLoading] = useState(false);
-  const user = useSelector((state) => state.user.user);
 
   const fetchCartItems = useCallback(async () => {
     setLoading(true);
@@ -58,27 +59,27 @@ const Cart = () => {
     }
   }, [containerInView]);
 
-  const handleQuantityChange = (productId, newQuantity) => {
-    const product = cartItems.find((item) => item.productId._id === productId);
-    if (newQuantity < 1) {
-      toast.error("Minimum quantity is 1");
-      return;
-    } else if (newQuantity > product.productId.quantity) {
-      toast.error(`Maximum available stock is ${product.productId.quantity}`);
-      return;
-    }
-
-    setCartItems((prevItems) =>
-      prevItems.map((item) =>
-        item.productId._id === productId
-          ? { ...item, quantity: newQuantity }
-          : item
-      )
-    );
-  };
-
   const increaseQty = useCallback(
     async (id, qty) => {
+      // const maxQuantityMap = cartItems.reduce((acc, item) => {
+      // acc[item.productId._id] = item.productId.quantity;
+      // return acc;
+      // }, {});
+
+      // console.log("max quantity map", maxQuantityMap);
+      // console.log("id", id);
+
+      // const maxQuantity = maxQuantityMap[id];
+      // console.log("max quantity", maxQuantity);
+
+      // if (maxQuantity === undefined) {
+      // return toast.error(`No max quantity found for product ID ${id}`);
+      // }
+
+      // if (qty + 1 > maxQuantity) {
+      // return toast.error(`Max quantity ${maxQuantity} exceeded`);
+      // }
+
       setLoading(true);
       try {
         const response = await axios.post(
@@ -95,27 +96,28 @@ const Cart = () => {
         }
       } catch (error) {
         console.error("Error increasing quantity:", error);
+        toast.error("Error increasing quantity");
       } finally {
         setLoading(false);
       }
     },
-    [fetchCartItems]
+    [cartItems, fetchCartItems]
   );
 
   const decreaseQty = useCallback(
     async (id, qty) => {
+      if (qty <= 1) {
+        toast.error("Cannot decrease quantity below the minimum limit of 1.");
+        return;
+      }
+
       setLoading(true);
       try {
-        if (qty <= 1) {
-          toast.error("Cannot decrease quantity below the minimum limit of 1.");
-          return;
-        }
-
         const response = await axios.post(
           `${backendDomin}/api/update-cart-product`,
           {
             _id: id,
-            quantity: Math.max(1, qty - 1),
+            quantity: qty - 1,
           },
           { withCredentials: true }
         );
@@ -125,13 +127,13 @@ const Cart = () => {
         }
       } catch (error) {
         console.error("Error decreasing quantity:", error);
+        toast.error("Error decreasing quantity");
       } finally {
         setLoading(false);
       }
     },
     [fetchCartItems]
   );
-
 
   const handleRemoveItem = async (productId) => {
     console.log("Removing item with ID:", productId);
@@ -144,9 +146,10 @@ const Cart = () => {
           withCredentials: true,
         }
       );
-  
+
       if (response.data.success) {
         fetchCartItems();
+        fetchUserAddToCart();
       } else {
         toast.error("Failed to remove item from cart");
       }
@@ -157,7 +160,6 @@ const Cart = () => {
       setLoading(false);
     }
   };
-  
 
   const totalPrice = cartItems.reduce(
     (total, item) => total + item.quantity * item.productId.sellingPrice,
@@ -191,37 +193,9 @@ const Cart = () => {
       >
         <div className="py-2 text-2xl font-bold">Your Shopping Cart</div>
         {loading ? (
-          <div className="flex h-screen justify-center items-center">
-            <div role="status">
-              <svg
-                aria-hidden="true"
-                className="w-12 h-12 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
-                viewBox="0 0 100 101"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 
-                  22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 
-                  27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.672
-                   50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
-                  fill="currentColor"
-                />
-                <path
-                  d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.816
-                  20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C5
-                   0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.0487
-                    10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.545
-                     15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.875
-                      38.2158 91.5421 39.6781 93.9676 39.0409Z"
-                  fill="currentFill"
-                />
-              </svg>
-              <span className="sr-only">Loading...</span>
-            </div>
-          </div>
+          <LoaderPage />
         ) : (
-          <div className="grid xl:grid-cols-2 grid-cols-1 gap-4 px-4 py-8">
+          <div className="grid lg:grid-cols-2 grid-cols-1 gap-4 px-4 py-8">
             <div className="flex flex-col gap-5">
               {cartItems.map((item) => (
                 <div key={item._id} className="flex flex-col items-center">

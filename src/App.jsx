@@ -26,6 +26,7 @@ import ViewAllProduct from "./compounts/products/ViewAllProduct";
 import SignInPage from "./auth/sign-in";
 import SignUpPage from "./auth/sign-up";
 import Filter from "./compounts/products/FilterBrand";
+import SearchProduct from "./compounts/products/SearchProduct";
 
 function App() {
   const dispatch = useDispatch();
@@ -83,7 +84,7 @@ function App() {
             }}
           >
             <ToastContainer position="top-center" />
-            <div className="w-full z-[1000] sticky bg-slate-900 top-0 overflow-x-hidden shadow-md shadow-green-200">
+            <div className="w-full z-[5] sticky bg-slate-900 top-0 overflow-x-hidden shadow-md shadow-green-200">
               <Navbar />
             </div>
             <main className="min-h-[calc(100vh-120px)]">
@@ -93,6 +94,7 @@ function App() {
                 <Route path="/signup" element={<SignUp />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/" element={<Home />} />
+                <Route path="/search" element={<SearchProduct/>}/>
                 <Route path="/admin-panel/" element={<AdminPanel />}>
                   <Route path="all-users" element={<AllUsers />} />
                   <Route path="admin-all-products" element={<AllProducts />} />

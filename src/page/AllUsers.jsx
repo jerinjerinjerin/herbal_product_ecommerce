@@ -3,12 +3,14 @@ import React, { useEffect, useState } from "react";
 import moment from "moment";
 import { FaEdit } from "react-icons/fa";
 import { motion } from "framer-motion";
-import backendDomin from "@/commen/api";
 import ChangeUserRole from "@/compounts/admin/ChangeUserRole";
+import backendDomin from "@/commen/api";
+import LoaderPage from "@/helpers/LoaderPage";
 
 const AllUsers = () => {
   const [allUsers, setAllUsers] = useState([]);
   const [openUpdate, setOpenUpdate] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [updateUserDetails, setUpdateUserDetails] = useState({
     email: "",
     name: "",
@@ -17,6 +19,7 @@ const AllUsers = () => {
   });
 
   const fetchAllUsers = async () => {
+    setLoading(true); // Set loading to true at the start
     try {
       const response = await axios.get(`${backendDomin}/api/all-users`, {
         withCredentials: "include",
@@ -28,6 +31,8 @@ const AllUsers = () => {
       }
     } catch (error) {
       console.log("Error fetching users:", error);
+    } finally {
+      setLoading(false); // Set loading to false once the data is fetched
     }
   };
 
@@ -49,64 +54,70 @@ const AllUsers = () => {
     >
       <h1 className="text-white text-center mb-4">All Users</h1>
       <div className="overflow-x-auto w-full">
-        <table className="min-w-full border-collapse">
-          <thead className="text-white">
-            <tr>
-              <th className="border border-green-600 text-center">ID</th>
-              <th className="border border-green-600 text-center">Name</th>
-              <th className="border border-green-600 text-center">Email</th>
-              <th className="border border-green-600 text-center">Role</th>
-              <th className="border border-green-600 text-center">
-                Created Date
-              </th>
-              <th className="border border-green-600 text-center">Actions</th>
-            </tr>
-          </thead>
-          <tbody className="text-white">
-            {Array.isArray(allUsers) ? (
-              allUsers.map((user, index) => (
-                <tr key={user._id}>
-                  <td className="border border-green-600 text-center">
-                    {index + 1}
-                  </td>
-                  <td className="border border-green-600 text-center">
-                    {user?.name}
-                  </td>
-                  <td className="border border-green-600 text-center">
-                    {user?.email}
-                  </td>
-                  <td
-                    className={`border border-green-600 text-center ${
-                      user?.role === "ADMIN" ? "text-blue-600" : "text-white"
-                    }`}
-                  >
-                    {user?.role}
-                  </td>
-
-                  <td className="border border-green-600 text-center">
-                    {moment(user?.createdAt).format("ll")}
-                  </td>
-                  <td className="border border-green-600 text-center">
-                    <button
-                      onClick={() => {
-                        setUpdateUserDetails(user);
-                        setOpenUpdate(true);
-                      }}
+        {loading ? (
+          <LoaderPage/>
+        ) : (
+          <table className="min-w-full border-collapse">
+            <thead className="text-white">
+              <tr>
+                <th className="border border-green-600 text-center">ID</th>
+                <th className="border border-green-600 text-center">Name</th>
+                <th className="border border-green-600 text-center">Email</th>
+                <th className="border border-green-600 text-center">Role</th>
+                <th className="border border-green-600 text-center">
+                  Created Date
+                </th>
+                <th className="border border-green-600 text-center">Actions</th>
+              </tr>
+            </thead>
+            <tbody className="text-white">
+              {Array.isArray(allUsers) ? (
+                allUsers.map((user, index) => (
+                  <tr key={user._id}>
+                    <td className="border border-green-600 text-center">
+                      {index + 1}
+                    </td>
+                    <td className="border border-green-600 text-center">
+                      {user?.name}
+                    </td>
+                    <td className="border border-green-600 text-center">
+                      {user?.email}
+                    </td>
+                    <td
+                      className={`border border-green-600 text-center ${
+                        user?.role === "ADMIN" ? "text-blue-600" : "text-white"
+                      }`}
                     >
-                      <FaEdit />
-                    </button>
+                      {user?.role}
+                    </td>
+                    <td className="border border-green-600 text-center">
+                      {moment(user?.createdAt).format("ll")}
+                    </td>
+                    <td className="border border-green-600 text-center">
+                      <button
+                        onClick={() => {
+                          setUpdateUserDetails(user);
+                          setOpenUpdate(true);
+                        }}
+                      >
+                        <FaEdit />
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td
+                    colSpan="6"
+                    className="border border-green-600 text-center"
+                  >
+                    Error loading users
                   </td>
                 </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan="6" className="border border-green-600 text-center">
-                  Error loading users
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
+              )}
+            </tbody>
+          </table>
+        )}
       </div>
       {openUpdate && (
         <ChangeUserRole

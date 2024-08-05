@@ -8,7 +8,7 @@ import {
   SheetTitle,
 } from "../../components/ui/sheet";
 import { MenuIcon } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import backendDomin from "@/commen/api";
 import { toast } from "react-toastify";
@@ -37,6 +37,13 @@ const Navbar = () => {
   const dispatch = useDispatch();
   const [menuDisplay, setMenuDisplay] = useState(false);
   const context = useContext(Context);
+  const navigate = useNavigate();
+
+  const [openMobileNav, setOpenMobileNav] = useState(false);
+
+  const handleMobileNav = () => {
+    setOpenMobileNav(!openMobileNav);
+  };
 
   const handleChangeMenu = () => {
     setMenuDisplay(!menuDisplay);
@@ -59,6 +66,16 @@ const Navbar = () => {
     }
   };
 
+  const handleSearch = (e) => {
+    const { value } = e.target;
+
+    if (value) {
+      navigate(`/search?q=${value}`);
+    } else {
+      navigate("/");
+    }
+  };
+
   return (
     <nav className="justify-between items-center flex lg:px-5 z-[10] md:px-2 h-[100px]">
       <div className="px-10 md:px-0">
@@ -73,7 +90,8 @@ const Navbar = () => {
       <div className="space-x-5 hidden lg:flex">
         {NavItem_Left.map((item, index) => (
           <div
-            className="flex items-center space-x-1 text-xs xl:text-[15px] text-white hover:text-green-500 font-semibold cursor-pointer"
+            className="flex items-center space-x-1 text-xs xl:text-[15px] 
+            text-white hover:text-green-500 font-semibold cursor-pointer"
             key={index}
           >
             <p>{item.name}</p>
@@ -86,6 +104,7 @@ const Navbar = () => {
           <div className="flex items-center xl:gap-2 gap-0 px-1 lg:px-2">
             <BsSearch className="size-5 md:size-5 " />
             <input
+              onChange={handleSearch}
               type="text"
               placeholder="search"
               className="outline-none ml-3 md:ml-auto md:w-auto w-[70px]"
@@ -126,9 +145,11 @@ const Navbar = () => {
             </div>
           )}
         </div>
+
         {NavItem_Right.map((item, index) => (
           <div
-            className="flex items-center space-x-1 text-white hover:text-green-500 font-semibold cursor-pointer"
+            className="flex items-center space-x-1 text-white hover:text-green-500 
+            font-semibold cursor-pointer"
             key={index}
           >
             <div className="">
@@ -209,15 +230,95 @@ const Navbar = () => {
         </div>
       </div>
 
-      <div className="lg:hidden flex px-4">
-        <Sheet>
-          <SheetTrigger>
+      <div className="lg:hidden flex px-4 ">
+        <Sheet className="relative z-[1002] text-white border border-l border-green-600">
+          <SheetTrigger onClick={handleMobileNav}>
             <MenuIcon className="text-white" />
           </SheetTrigger>
-          <SheetContent>
-            <SheetTitle>
-              <span></span>
+          <SheetContent className="flex flex-col gap-5 bg-black justify-center items-center">
+            <SheetTitle className="relative flex items-center">
+              <div className="pb-5">
+                <div className="flex items-center justify-center flex-col gap-5">
+                  {user?.data?._id && (
+                    <div
+                      className="text-xl cursor-pointer"
+                      onClick={handleChangeMenu}
+                    >
+                      {user && (
+                        <img
+                          src={user?.data?.profilePic}
+                          className="w-10 h-10 rounded-full"
+                          alt={user?.data?.name}
+                        />
+                      )}
+                    </div>
+                  )}
+                  {menuDisplay && (
+                    <div
+                      className="absolute bg-transparent text-white top-10 h-fit"
+                      onClick={handleChangeMenu}
+                    >
+                      {user?.data?.role === "ADMIN" && (
+                        <nav className="flex justify-center items-center">
+                          <Link
+                            to={"/admin-panel/admin-all-products"}
+                            className="whitespace-nowrap text-center hover:text-green-600 text-xs"
+                          >
+                            Admin Panel
+                          </Link>
+                        </nav>
+                      )}
+                    </div>
+                  )}
+                </div>
+              </div>
             </SheetTitle>
+            {NavItem_Right.map((item, index) => (
+              <div
+                className="flex items-center space-x-1 text-white hover:text-green-500 
+              font-semibold cursor-pointer"
+                key={index}
+              >
+                <div className="">
+                  <Link
+                    to={item.path}
+                    className="flex lg:gap-1 gap-0 text-xs xl:text-[15px] items-center"
+                  >
+                    {item.icon}
+                    <p>{item.name}</p>
+                  </Link>
+                </div>
+              </div>
+            ))}
+
+            <div className="text-white flex items-center gap-1 group text-xs">
+              <span>
+                <IoBag />
+              </span>{" "}
+              <Link
+                to={"/cart"}
+                className="hover:text-green-600 flex gap-1 items-center"
+              >
+                <h1 className="">My bag </h1>
+              </Link>
+              {user?.data?._id && (
+                <span className="text-white-300 group-hover:text-green-600">
+                  {context.cartProductCount}
+                </span>
+              )}
+            </div>
+            <div className="space-y-5  flex items-center justify-center flex-col">
+              {NavItem_Left.map((item, index) => (
+                <div
+                  className="flex items-center space-x-1 text-xs xl:text-[15px] 
+                 text-white hover:text-green-500 font-semibold cursor-pointer"
+                  key={index}
+                >
+                  <p>{item.name}</p>
+                  {item.icon}
+                </div>
+              ))}
+            </div>
           </SheetContent>
         </Sheet>
       </div>

@@ -8,6 +8,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import backendDomin from "@/commen/api";
 import formatCurrency from "@/helpers/formatCurrency";
+import LoaderPage from "@/helpers/LoaderPage";
 
 const ViewAdminProduct = () => {
   const { id } = useParams();
@@ -108,7 +109,7 @@ const ViewAdminProduct = () => {
           </div>
         </div>
       ) : (
-        <p>Loading...</p>
+        <LoaderPage/>
       )}
     </motion.div>
   );
