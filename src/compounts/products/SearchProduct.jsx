@@ -85,6 +85,7 @@ const SearchProduct = () => {
               </div>
             )
           }
+            <h1 className="text-white text-center font-semibold py-4">Search Result: {" "}{searchProduct.length}</h1>
           <div className="text-white grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3">
             {searchProduct.map((item, index) => (
               <motion.div

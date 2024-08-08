@@ -1,13 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { NavItem_Left, NavItem_Right } from "../../data/data";
 import { BsSearch } from "react-icons/bs";
-import {
-  Sheet,
-  SheetTrigger,
-  SheetContent,
-  SheetTitle,
-} from "../../components/ui/sheet";
-import { MenuIcon } from "lucide-react";
+
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import backendDomin from "@/commen/api";
@@ -31,6 +25,7 @@ import {
   AlertDialogAction,
 } from "@/components/ui/alert-dialog";
 import Context from "@/context/context";
+import MobileNav from "./MobileNav";
 
 const Navbar = () => {
   const user = useSelector((state) => state.user.user);
@@ -39,15 +34,11 @@ const Navbar = () => {
   const context = useContext(Context);
   const navigate = useNavigate();
 
-  const [openMobileNav, setOpenMobileNav] = useState(false);
-
-  const handleMobileNav = () => {
-    setOpenMobileNav(!openMobileNav);
-  };
-
   const handleChangeMenu = () => {
     setMenuDisplay(!menuDisplay);
   };
+
+  useEffect(() => {}, [user]);
 
   const handleLogout = async () => {
     try {
@@ -204,7 +195,10 @@ const Navbar = () => {
                     </AlertDialogDescription>
                   </AlertDialogHeader>
                   <AlertDialogFooter>
-                    <AlertDialogCancel className="bg-transparent border border-green-600 text-white hover:text-white hover:bg-blue-800">
+                    <AlertDialogCancel
+                      className="bg-transparent border border-green-600 text-white 
+                    hover:text-white hover:bg-blue-800"
+                    >
                       Cancel
                     </AlertDialogCancel>
                     <AlertDialogAction
@@ -219,7 +213,10 @@ const Navbar = () => {
             </div>
           ) : (
             <Link to="/login" className="">
-              <Button className="text-white bg-transparent group hover:bg-slate-900 hover:text-green-600 cursor-pointer">
+              <Button
+                className="text-white bg-transparent group hover:bg-slate-900 
+              hover:text-green-600 cursor-pointer"
+              >
                 Login{" "}
                 <span className="ml-1">
                   <FaUser className="text-white group-hover:text-green-600" />
@@ -231,96 +228,14 @@ const Navbar = () => {
       </div>
 
       <div className="lg:hidden flex px-4 ">
-        <Sheet className="relative z-[1002] text-white border border-l border-green-600">
-          <SheetTrigger onClick={handleMobileNav}>
-            <MenuIcon className="text-white" />
-          </SheetTrigger>
-          <SheetContent className="flex flex-col gap-5 bg-black justify-center items-center">
-            <SheetTitle className="relative flex items-center">
-              <div className="pb-5">
-                <div className="flex items-center justify-center flex-col gap-5">
-                  {user?.data?._id && (
-                    <div
-                      className="text-xl cursor-pointer"
-                      onClick={handleChangeMenu}
-                    >
-                      {user && (
-                        <img
-                          src={user?.data?.profilePic}
-                          className="w-10 h-10 rounded-full"
-                          alt={user?.data?.name}
-                        />
-                      )}
-                    </div>
-                  )}
-                  {menuDisplay && (
-                    <div
-                      className="absolute bg-transparent text-white top-10 h-fit"
-                      onClick={handleChangeMenu}
-                    >
-                      {user?.data?.role === "ADMIN" && (
-                        <nav className="flex justify-center items-center">
-                          <Link
-                            to={"/admin-panel/admin-all-products"}
-                            className="whitespace-nowrap text-center hover:text-green-600 text-xs"
-                          >
-                            Admin Panel
-                          </Link>
-                        </nav>
-                      )}
-                    </div>
-                  )}
-                </div>
-              </div>
-            </SheetTitle>
-            {NavItem_Right.map((item, index) => (
-              <div
-                className="flex items-center space-x-1 text-white hover:text-green-500 
-              font-semibold cursor-pointer"
-                key={index}
-              >
-                <div className="">
-                  <Link
-                    to={item.path}
-                    className="flex lg:gap-1 gap-0 text-xs xl:text-[15px] items-center"
-                  >
-                    {item.icon}
-                    <p>{item.name}</p>
-                  </Link>
-                </div>
-              </div>
-            ))}
-
-            <div className="text-white flex items-center gap-1 group text-xs">
-              <span>
-                <IoBag />
-              </span>{" "}
-              <Link
-                to={"/cart"}
-                className="hover:text-green-600 flex gap-1 items-center"
-              >
-                <h1 className="">My bag </h1>
-              </Link>
-              {user?.data?._id && (
-                <span className="text-white-300 group-hover:text-green-600">
-                  {context.cartProductCount}
-                </span>
-              )}
-            </div>
-            <div className="space-y-5  flex items-center justify-center flex-col">
-              {NavItem_Left.map((item, index) => (
-                <div
-                  className="flex items-center space-x-1 text-xs xl:text-[15px] 
-                 text-white hover:text-green-500 font-semibold cursor-pointer"
-                  key={index}
-                >
-                  <p>{item.name}</p>
-                  {item.icon}
-                </div>
-              ))}
-            </div>
-          </SheetContent>
-        </Sheet>
+        <MobileNav
+          menuDisplay={menuDisplay}
+          handleChangeMenu={handleChangeMenu}
+          user={user}
+          NavItem_Left={NavItem_Left}
+          NavItem_Right={NavItem_Right}
+          handleLogout={handleLogout}
+        />
       </div>
     </nav>
   );

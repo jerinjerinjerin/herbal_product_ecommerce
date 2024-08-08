@@ -84,7 +84,7 @@ function App() {
             }}
           >
             <ToastContainer position="top-center" />
-            <div className="w-full z-[5] sticky bg-slate-900 top-0 overflow-x-hidden shadow-md shadow-green-200">
+            <div className="w-full z-[25] sticky bg-slate-900 top-0 overflow-x-hidden shadow-md shadow-green-200">
               <Navbar />
             </div>
             <main className="min-h-[calc(100vh-120px)]">
