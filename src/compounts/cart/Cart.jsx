@@ -10,6 +10,9 @@ import formatCurrency from "@/helpers/formatCurrency";
 import backendDomin from "@/commen/api";
 import Context from "@/context/context";
 import LoaderPage from "@/helpers/LoaderPage";
+import { loadStripe } from '@stripe/stripe-js'; 
+
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
 
 const Cart = () => {
   const { fetchUserAddToCart } = useContext(Context);
@@ -170,6 +173,39 @@ const Cart = () => {
   const tax = totalPrice * 0.01;
   const finalTotalPrice = totalPrice - discountPrice + tax;
 
+
+
+
+  const handlePayment = async () => {
+    setLoading(true);
+    try {
+      // Make sure backendDomin is defined and points to your backend server
+      const response = await axios.post(`${backendDomin}/api/checkout`, { cartItems }, { withCredentials: true });
+  
+      if (response.data?.id) {
+        // Ensure stripePromise is resolved before using it
+        const stripe = await stripePromise;
+        if (stripe) {
+          const { error } = await stripe.redirectToCheckout({ sessionId: response.data.id });
+          if (error) {
+            console.error("Stripe Checkout error:", error);
+            toast.error("An error occurred during redirection to checkout");
+          }
+        } else {
+          console.error("Stripe not initialized");
+          toast.error("Stripe failed to initialize");
+        }
+      } else {
+        toast.error("No session ID received from the server");
+      }
+    } catch (error) {
+      console.error("Payment error:", error);
+      toast.error("An error occurred while processing the payment");
+    } finally {
+      setLoading(false);
+    }
+  };  
+
   if (cartItems.length === 0) {
     return (
       <div className="text-center text-white flex flex-col h-auto lg:pt-[5%] pt-[30%] justify-center items-center">
@@ -279,10 +315,9 @@ const Cart = () => {
               </div>
               <div className="flex flex-row gap-5 items-center justify-between w-full sm:w-[90%]">
                 <Link
-                  to="/checkout"
                   className="hover:bg-green-600 text-white bg-transparent w-full"
                 >
-                  <Button className="hover:bg-green-600 text-white border border-green-600 bg-transparent w-full">
+                  <Button onClick={handlePayment} className="hover:bg-green-600 text-white border border-green-600 bg-transparent w-full">
                     Make Purchase
                   </Button>
                 </Link>
