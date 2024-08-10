@@ -30,6 +30,7 @@ import SearchProduct from "./compounts/products/SearchProduct";
 import Success from "./page/Success";
 import NotFound from "./page/NotFound";
 import Cancel from "./page/Cancel";
+import OrderPage from "./page/OrderPage";
 
 function App() {
   const dispatch = useDispatch();
@@ -114,6 +115,7 @@ function App() {
                 <Route path="/all-products-shop" element={<ViewAllProduct />} />
                 <Route path="/success" element={<Success/>}/>
                 <Route path="/cancel" element={<Cancel/>}/>
+                <Route path="/order" element={<OrderPage/>}/>
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </main>
