@@ -27,6 +27,9 @@ import SignInPage from "./auth/sign-in";
 import SignUpPage from "./auth/sign-up";
 import Filter from "./compounts/products/FilterBrand";
 import SearchProduct from "./compounts/products/SearchProduct";
+import Success from "./page/Success";
+import NotFound from "./page/NotFound";
+import Cancel from "./page/Cancel";
 
 function App() {
   const dispatch = useDispatch();
@@ -35,7 +38,7 @@ function App() {
   const fetchUserDetails = async () => {
     try {
       const response = await axios.get(`${backendDomin}/api/user-detials`, {
-        withCredentials: "include",
+        withCredentials: true
       });
       if (response.data.success) {
         // console.log("data", response.data);
@@ -109,6 +112,9 @@ function App() {
                 <Route path="/cart" element={<Cart />} />
                 <Route path="/go-to-shop" element={<Filter />} />
                 <Route path="/all-products-shop" element={<ViewAllProduct />} />
+                <Route path="/success" element={<Success/>}/>
+                <Route path="/cancel" element={<Cancel/>}/>
+                <Route path="*" element={<NotFound />} />
               </Routes>
             </main>
             <SocialMedia />
