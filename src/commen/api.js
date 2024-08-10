@@ -1,4 +1,4 @@
-const backendDomin = 'https://herbal-ecommerce-backend-2po8.vercel.app'
+const backendDomin = 'https://herbal-ecommerce-backend-4x5t.vercel.app'
 // const backendDomin = 'http://localhost:8080'
 
 
