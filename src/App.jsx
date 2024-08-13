@@ -55,7 +55,7 @@ function App() {
       const response = await axios.get(
         `${backendDomin}/api/count-product-cart`,
         {
-          withCredentials: "include",
+          withCredentials: true,
         }
       );
 

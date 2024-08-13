@@ -42,15 +42,15 @@ const Login = () => {
         `${backendDomain}/api/login-user`,
         data,
         {
-          withCredentials: "include"
+          withCredentials: true,
         }
       );
 
       if (response.data.success) {
         toast.success(response.data.message);
-        navigater("/");
         fetchUserDetails();
         fetchUserAddToCart();
+        navigater("/");
       }
 
     } catch (error) {
